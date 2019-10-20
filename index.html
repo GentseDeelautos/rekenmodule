@@ -8,15 +8,28 @@
         const kwPerKm = 15.0 / 100 // TODO: afhankelijk van rijprofiel
         const creditsPerKw = 15
         const euroPerCredit = 300.0 / 4800 // TODO: afhankelijk van laden
+        const DegageTot100 = 0.32  // prijs per km tem 100km
+        const Degage101tot200 = 0.28 // prijs per km van 101 tem 200km
+        const Degage201 = 0.24 // prijs per km vanaf 201km
         function calculate() {
             const km = parseInt(document.querySelector('[name="km"]').value)
             const min = parseInt(document.querySelector('[name="min"]').value)
             const credit = startup + km * kwPerKm * creditsPerKw + min
-            window.alert(credit * euroPerCredit + 'euro')
+            var Degage = 0
+            if (km > 200) {
+                  Degage = DegageTot100 * 100 + Degage101tot200 * 100 + (km -200) * Degage201;
+                } else if (km < 101) {
+                  Degage = km * DegageTot100;
+                } else {
+                  Degage =  DegageTot100 * 100 + ( km - 100 ) * Degage101tot200;
+                }
+            window.alert('Partago: " + credit * euroPerCredit + 'euro, Dégage: ' + Degage + 'euro')
         }
     </script>
 </head>
 <html>
+    Vul hieronder de geplande km in en de geplande tijd in minuten.
+    Zo kun je berekenen wat een paragorit zal kosten aan een gemiddeld verbruik van 15 kWh/100km, dit is snelweg op ecostand...
 <form>
     <label>
         km
