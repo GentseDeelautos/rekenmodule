@@ -1,0 +1,33 @@
+<html>
+
+<head>
+    <script>
+        // TODO: nog geen rekening gehouden met nacht
+        const startup = 30
+        const kwPerKm = 15.0 / 100 // TODO: afhankelijk van rijprofiel
+        const creditsPerKw = 15
+        const euroPerCredit = 300.0 / 4800 // TODO: afhankelijk van laden
+        function calculate() {
+            const km = parseInt(document.querySelector('[name="km"]').value)
+            const min = parseInt(document.querySelector('[name="min"]').value)
+            const credit = startup + km * kwPerKm * creditsPerKw + min
+            window.alert(credit * euroPerCredit + 'euro')
+        }
+    </script>
+</head>
+<html>
+<form>
+    <label>
+        km
+        <input type="number" name="km" value="10">
+    </label>
+    <label>
+        minuten
+        <input type="number" name="min" value="15">
+    </label>
+    <input type="submit" value="calculate" onclick="javascript: calculate()">
+</form>
+
+</html>
+
+</html>
