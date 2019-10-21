@@ -3,28 +3,32 @@
 <head>
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=yes"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/3.0.1/mini-default.min.css" integrity="sha256-Tb0Wikpef+a1/IiQ0gXyT9PsM654/3hNHHdxMwEhBLA=" crossorigin="anonymous" />    <script>
-        // TODO: nog geen rekening gehouden met nacht
-        const startup = 30
-        const kwPerKm = 15.0 / 100 // TODO: afhankelijk van rijprofiel
-        const creditsPerKw = 15
-        const euroPerCredit = 300.0 / 4800 // TODO: afhankelijk van laden
-        const DegageTot100 = 0.32  // prijs per km tem 100km
-        const Degage101tot200 = 0.28 // prijs per km van 101 tem 200km
-        const Degage201 = 0.24 // prijs per km vanaf 201km
         function calculate() {
             const km = parseInt(document.querySelector('[name="km"]').value)
             const min = parseInt(document.querySelector('[name="min"]').value)
-            const credit = startup + km * kwPerKm * creditsPerKw + min
-            var Degage = 0
-            if (km > 200) {
-                  Degage = DegageTot100 * 100 + Degage101tot200 * 100 + (km -200) * Degage201;
-                } else if (km < 101) {
-                  Degage = km * DegageTot100;
-                } else {
-                  Degage =  DegageTot100 * 100 + ( km - 100 ) * Degage101tot200;
-                }
-            window.alert(`Partago: ${ credit * euroPerCredit } euro, Degage ${ Degage } euro`)
+            window.alert(`Partago: ${ partagoCost(km, min) } euro, Degage: ${ degageCost(km) } euro`)
             return false
+        }
+
+        function partagoCost (km, min) {
+            const startup = 30
+            const kwPerKm = 15.0 / 100 // TODO: afhankelijk van rijprofiel
+            const creditsPerKw = 15
+            const euroPerCredit = 300.0 / 4800 // TODO: afhankelijk van laden
+            // TODO: rekening houden met nacht
+
+            const credit = startup + km * kwPerKm * creditsPerKw + min
+            return credit * euroPerCredit
+        }
+
+        function degageCost (km) {
+            const tot100 = 0.32  // prijs per km tem 100km
+            const tot200 = 0.28 // prijs per km van 101 tem 200km
+            const meer = 0.24 // prijs per km vanaf 201km
+
+            if (km < 101) return km * tot100
+            if (km < 201 ) return tot100 * 100 + ( km - 100 ) * tot200
+            return tot100 * 100 + tot200 * 100 + (km -200) * meer
         }
     </script>
 </head>
@@ -40,7 +44,7 @@
             <label for="min" class="doc">minuten</label>
             <input type="number" name="min" value="15" class="doc">
     </div>
-    <input type="submit" value="calculate" onclick="javascript: calculate()">
+    <input type="submit" value="calculate" onclick="javascript: return calculate()">
 </form>
 
 </html>
