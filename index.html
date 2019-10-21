@@ -2,7 +2,7 @@
 
 <head>
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=yes"/>
-    <script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/3.0.1/mini-default.min.css" integrity="sha256-Tb0Wikpef+a1/IiQ0gXyT9PsM654/3hNHHdxMwEhBLA=" crossorigin="anonymous" />    <script>
         // TODO: nog geen rekening gehouden met nacht
         const startup = 30
         const kwPerKm = 15.0 / 100 // TODO: afhankelijk van rijprofiel
@@ -23,28 +23,24 @@
                 } else {
                   Degage =  DegageTot100 * 100 + ( km - 100 ) * Degage101tot200;
                 }
-            window.alert(`Partago: ${ credit * euroPerCredit } euro, Dégage ${ Degage } euro`)
+            window.alert(`Partago: ${ credit * euroPerCredit } euro, Degage ${ Degage } euro`)
             return false
         }
     </script>
 </head>
 <html>
     Vul hieronder de geplande km in en de geplande tijd in minuten.
-    Zo kun je berekenen wat een partagorit of dégagrit zal kosten aan een gemiddeld verbruik van 15 kWh/100km, dit is snelweg op ecostand...
+    Zo kun je berekenen wat een partagorit (aan een gemiddeld verbruik van 15 kWh/100km, dit is snelweg op ecostand) of d&eacute;gagerit zal kosten
 <form>
-    <div>
-    <label>
-        km
-        <input type="number" name="km" value="10">
-    </label>
+    <div class="input-group vertical">
+            <label for="km" class="doc">km</label>
+            <input type="number" name="km" id="km" value="10" class="doc">
     </div>
-    <div>
-    <label>
-        minuten
-        <input type="number" name="min" value="15">
-    </label>
+    <div class="input-group vertical">
+            <label for="min" class="doc">minuten</label>
+            <input type="number" name="min" value="15" class="doc">
+    </div>
     <input type="submit" value="calculate" onclick="javascript: calculate()">
-    </div>
 </form>
 
 </html>
