@@ -6,7 +6,7 @@
         function calculate() {
             const km = parseInt(document.querySelector('[name="km"]').value)
             const min = parseInt(document.querySelector('[name="min"]').value)
-            window.alert(`Partago: ${ partagoCost(km, min) } euro, Degage: ${ degageCost(km) } euro`)
+            document.getElementById('demo').innerHTML = (`Partago: ${ partagoCost(km, min) } euro, Degage: ${ degageCost(km) } euro`)
             return false
         }
 
@@ -33,8 +33,9 @@
     </script>
 </head>
 <html>
-    Vul hieronder de geplande km in en de geplande tijd in minuten.
-    Zo kun je berekenen wat een partagorit (aan een gemiddeld verbruik van 15 kWh/100km, dit is snelweg op ecostand) of d&eacute;gagerit zal kosten
+    Vul hieronder de geplande km in en de geplande tijd in minuten.<br>
+    Zo kun je berekenen wat een partagorit (aan een gemiddeld verbruik van 15 kWh/100km, dit is snelweg op ecostand) <br>
+    of d&eacute;gagerit zal kosten
 <form>
     <div class="input-group vertical">
             <label for="km" class="doc">km</label>
@@ -46,5 +47,7 @@
     </div>
     <input type="submit" value="calculate" onclick="javascript: return calculate()">
 </form>
+
+<p id="demo"></p>
 
 </html>
