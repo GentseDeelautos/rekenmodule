@@ -33,9 +33,11 @@
     </script>
 </head>
 <html>
-    Vul hieronder de geplande km in en de geplande tijd in minuten.<br>
-    Zo kun je berekenen wat een partagorit (aan een gemiddeld verbruik van 15 kWh/100km, dit is snelweg op ecostand) <br>
-    of d&eacute;gagerit zal kosten
+    <p>
+        Vul hieronder de geplande km in en de geplande tijd in minuten.<br>
+        Zo kun je berekenen wat een partagorit (aan een gemiddeld verbruik van 15 kWh/100km, dit is snelweg op ecostand) <br>
+        of d&eacute;gagerit zal kosten
+    </p>
 <form>
     <div class="input-group vertical">
             <label for="km" class="doc">km</label>
@@ -45,9 +47,16 @@
             <label for="min" class="doc">minuten</label>
             <input type="number" name="min" value="15" class="doc">
     </div>
-    <input type="submit" value="calculate" onclick="javascript: return calculate()">
 </form>
 
-<p id="demo"></p>
+<label for="modal-control" class="button doc">Calculate</label>
+<input type="checkbox" id="modal-control" class="modal" onchange="javascript: return calculate()">
+<div>
+  <div class="card">
+    <label for="modal-control" class="modal-close" ></label>
+    <h3 class="section">Resultaat</h3>
+    <p id="demo">This is a modal dialog!</p>
+  </div>
+</div>
 
 </html>
