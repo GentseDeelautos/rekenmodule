@@ -22,6 +22,36 @@
                     meer: 0.24 // prijs per km vanaf 201km
                 },
                 formule: 'km <= 100 ? tot100 * km : (tot100 * 100 + km <= 200 ? tot200 * (km - 100) : (tot200 * 100 + meer * (km - 200))) '
+            },
+            'Cambio Start': {
+                variables: {
+                    tot100: 0.35,  // prijs per km tem 100km
+                    meer: 0.23, // prijs per km vanaf 100km
+                    uurPrijs: 1.75
+                },
+                formule: '(uurPrijs * ((min - min % 60) / 60 + 1)) + (km <= 100 ? tot100 * km : (tot100 * 100 + meer * (km - 100)))'
+            },
+            'Cambio Bonus': {
+                variables: {
+                    tot100: 0.26,  // prijs per km tem 100km
+                    meer: 0.23, // prijs per km vanaf 100km
+                    uurPrijs: 1.75
+                },
+                formule: '(uurPrijs * ((min - min % 60) / 60 + 1)) + (km <= 100 ? tot100 * km : (tot100 * 100 + meer * (km - 100)))'
+            },
+            'Cambio Comfort': {
+                variables: {
+                    tot100: 0.23,  // prijs per km tem 100km
+                    meer: 0.18, // prijs per km vanaf 100km
+                    uurPrijs: 1.55
+                },
+                formule: '(uurPrijs * ((min - min % 60) / 60 + 1)) + (km <= 100 ? tot100 * km : (tot100 * 100 + meer * (km - 100)))'
+            },
+            BattFan: {
+                variables: {
+                    dagPrijs: 30.25
+                },
+                formule: 'dagPrijs + dagPrijs * (min - min % (60 * 24)) / (60 * 24)'
             }
         }
         
