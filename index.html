@@ -3,49 +3,45 @@
 <head>
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=yes"/>
     <script src="https://cdn.jsdelivr.net/npm/mathjs@6.2.3/dist/math.min.js" integrity="sha256-jnrFf6CiZ2veyKUaL7l7FHWW/ela8txaw/J7SVZzW5o=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/3.0.1/mini-default.min.css" integrity="sha256-Tb0Wikpef+a1/IiQ0gXyT9PsM654/3hNHHdxMwEhBLA=" crossorigin="anonymous" />    <script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/3.0.1/mini-default.min.css" integrity="sha256-Tb0Wikpef+a1/IiQ0gXyT9PsM654/3hNHHdxMwEhBLA=" crossorigin="anonymous" />
+    <script>
         const settings = {
-            partago: {
+            Partago: {
                 variables: {
-                    startup: 30,
+                    start: 30,
                     kwPerKm: 15.0 / 100, // TODO: afhankelijk van rijprofiel
                     creditsPerKw: 15,
                     euroPerCredit: 300.0 / 4800, // TODO: afhankelijk van laden
                 },
-                formula: '(startup + km * kwPerKm * creditsPerKw + min) * euroPerCredit'
-            }/* ,
-            degage: {
+                formule: '(start + km * kwPerKm * creditsPerKw + min) * euroPerCredit'
+            },
+            'D&eacute;gage': {
                 variables: {
                     tot100: 0.32,  // prijs per km tem 100km
                     tot200: 0.28, // prijs per km van 101 tem 200km
                     meer: 0.24 // prijs per km vanaf 201km
                 },
-                formula: 'meer * km + km > 200 ? 0 : ' */
+                formule: 'km <= 100 ? tot100 * km : (tot100 * 100 + km <= 200 ? tot200 * (km - 100) : (tot200 * 100 + meer * (km - 200))) '
             }
         }
         
         
-        function calculate() {
+        function toonResultaat() {
             const km = parseInt(document.querySelector('[name="km"]').value)
             const min = parseInt(document.querySelector('[name="min"]').value)
-            document.getElementById('demo').innerHTML = (`Partago: ${ partagoCost(km, min) } euro, Degage: ${ degageCost(km) } euro`)
+
+            const lines = []
+            for (naam in settings) {
+                lines.push(`<strong>${ naam }:</strong>&nbsp;${bereken(naam, km, min)}&euro;`)
+            }
+
+            document.getElementById('demo').innerHTML = lines.join('<br>')
             return false
         }
 
-        function partagoCost (km, min) {
-            const { partago: { formula, variables } } = settings
-            return math.evaluate(formula, { ...variables, km, min })
-            
-        }
-
-        function degageCost (km) {
-            const tot100 = 0.32  // prijs per km tem 100km
-            const tot200 = 0.28 // prijs per km van 101 tem 200km
-            const meer = 0.24 // prijs per km vanaf 201km
-
-            if (km < 101) return km * tot100
-            if (km < 201 ) return tot100 * 100 + ( km - 100 ) * tot200
-            return tot100 * 100 + tot200 * 100 + (km -200) * meer
+        function bereken (name, km, min) {
+            const { formule, variables } = settings[name]
+            return Math.round(math.evaluate(formule, { ...variables, km, min }) * 100) / 100
         }
     </script>
 </head>
@@ -66,10 +62,10 @@
     </div>
 </form>
 
-<label for="modal-control" class="button doc">Calculate</label>
-<input type="checkbox" id="modal-control" class="modal" onchange="javascript: return calculate()">
+<label for="modal-control" class="button doc">toonResultaat</label>
+<input type="checkbox" id="modal-control" class="modal" onchange="javascript: return toonResultaat()">
 <div>
-  <div class="card">
+  <div class="card large">
     <label for="modal-control" class="modal-close" ></label>
     <h3 class="section">Resultaat</h3>
     <p id="demo"></p>
