@@ -4,6 +4,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=yes"/>
     <script src="https://cdn.jsdelivr.net/npm/mathjs@6.2.3/dist/math.min.js" integrity="sha256-jnrFf6CiZ2veyKUaL7l7FHWW/ela8txaw/J7SVZzW5o=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/3.0.1/mini-default.min.css" integrity="sha256-Tb0Wikpef+a1/IiQ0gXyT9PsM654/3hNHHdxMwEhBLA=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/7.2.0/highcharts.js" integrity="sha256-pWlJ6y5bcww1f1YFl+ak3DjzWUFtLTiy1u1amuLuSfA=" crossorigin="anonymous"></script>
     <script>
         const settings = {
             Partago: {
@@ -66,9 +67,49 @@
             }
 
             document.getElementById('demo').innerHTML = lines.join('<br>')
+            toonGrafiek(km)
             return false
         }
-
+        const toonGrafiek = km => {
+            const series = []
+            for (const name in settings) {
+                const data = []
+                for (let time = 0; time < 24 * 60 ; time += 5) data.push(bereken(name, km, time))
+                series.push({ name, data })
+            }
+            Highcharts.chart('container', {
+                title: { text: `Kost per tijd voor ${km}km` },
+                yAxis: { title: { text: 'Kost' } },
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle'
+                },
+                plotOptions: {
+                    series: {
+                        label: {
+                            connectorAllowed: false
+                        },
+                        pointStart: 0
+                    }
+                },
+                series,
+                responsive: {
+                    rules: [{
+                        condition: {
+                            maxWidth: 500
+                        },
+                        chartOptions: {
+                            legend: {
+                                layout: 'horizontal',
+                                align: 'center',
+                                verticalAlign: 'bottom'
+                            }
+                        }
+                    }]
+                }
+            });
+        }
         function bereken (name, km, min) {
             const { formule, variables } = settings[name]
             return Math.round(math.evaluate(formule, { ...variables, km, min }) * 100) / 100
@@ -92,14 +133,17 @@
     </div>
 </form>
 
-<label for="modal-control" class="button doc">toonResultaat</label>
-<input type="checkbox" id="modal-control" class="modal" onchange="javascript: return toonResultaat()">
+<!-- <label for="modal-control" class="button doc">toonResultaat</label> -->
+<!-- <input type="checkbox" id="modal-control" class="modal" onchange="javascript: return toonResultaat()"> -->
+<input type="button" id="modal-control" onclick="javascript: return toonResultaat()" value="toon resultaat">
 <div>
   <div class="card large">
-    <label for="modal-control" class="modal-close" ></label>
-    <h3 class="section">Resultaat</h3>
+    <!-- <label for="modal-control" class="modal-close" ></label> -->
+    <!-- <h3 class="section">Resultaat</h3> -->
     <p id="demo"></p>
   </div>
 </div>
+
+<div id="container"></div>
 
 </html>
