@@ -55,32 +55,30 @@
                 formule: 'dagPrijs + dagPrijs * (min - min % (60 * 24)) / (60 * 24)'
             }
         }
-        
-        
-        function toonResultaat() {
+           
+        function toonResultaat () {
             const km = parseInt(document.querySelector('[name="km"]').value)
             const min = parseInt(document.querySelector('[name="min"]').value)
+            toonResultBox(km, min)
+            toonVasteKmGrafiek(km)
+            toonVasteTijdGrafiek(km, min)
+            return false
+        }
 
+        function toonResultBox (km, min) {
             const lines = []
             for (naam in settings) {
                 lines.push(`<strong>${ naam }:</strong>&nbsp;${bereken(naam, km, min)}&euro;`)
             }
-
             document.getElementById('demo').innerHTML = lines.join('<br>')
-            toonGrafiek(km)
-            return false
         }
-        const toonGrafiek = km => {
-            const series = []
-            for (const name in settings) {
-                const data = []
-                for (let time = 0; time < 24 * 60 ; time += 5) data.push(bereken(name, km, time))
-                series.push({ name, data })
-            }
-            Highcharts.chart('container', {
-                title: { text: `Kost per tijd voor ${km}km` },
+
+        function toonGrafiek (series, id, titleText) {
+            Highcharts.chart(id, {
+                title: { text: titleText },
                 yAxis: { title: { text: 'Kost' } },
                 legend: {
+                    useHTML: true,
                     layout: 'vertical',
                     align: 'right',
                     verticalAlign: 'middle'
@@ -110,6 +108,28 @@
                 }
             });
         }
+
+        function toonVasteKmGrafiek (km) {
+            const series = []
+            for (const name in settings) {
+                const data = []
+                for (let time = 0; time < 24 * 60 ; time += 5) data.push(bereken(name, km, time))
+                series.push({ name, data })
+            }
+            toonGrafiek(series, 'vasteKmGrafiek', `Kost per tijd voor ${km}km`)
+        }
+
+        function toonVasteTijdGrafiek (km, min) {
+            const series = []
+            const maxKm = min / 60 * 120 // maximum 120 km/h
+            for (const name in settings) {
+                const data = []
+                for (let km = 0; km <= maxKm; km++) data.push(bereken(name, km, min))
+                series.push({ name, data })
+            }
+            toonGrafiek(series, 'vasteTijdGrafiek', `Kost per km voor ${min}min`)
+        }
+
         function bereken (name, km, min) {
             const { formule, variables } = settings[name]
             return Math.round(math.evaluate(formule, { ...variables, km, min }) * 100) / 100
@@ -131,6 +151,10 @@
             <label for="min" class="doc">minuten</label>
             <input type="number" name="min" value="15" class="doc">
     </div>
+    <div class="input-group vertical">
+        <label for="kwPer100Km">kW per 100 km</label>
+        <input type="number" name="kwPer100Km" id="kwPer100Km" value="15" class="doc">
+    </div>
 </form>
 
 <!-- <label for="modal-control" class="button doc">toonResultaat</label> -->
@@ -144,6 +168,7 @@
   <!-- </div>
 </div> -->
 
-<div id="container"></div>
+<div id="vasteKmGrafiek"></div>
+<div id="vasteTijdGrafiek"></div>
 
 </html>
