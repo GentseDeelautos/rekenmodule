@@ -22,7 +22,7 @@
                     tot200: 0.28, // prijs per km van 101 tem 200km
                     meer: 0.24 // prijs per km vanaf 201km
                 },
-                formule: 'km <= 100 ? tot100 * km : (tot100 * 100 + km <= 200 ? tot200 * (km - 100) : (tot200 * 100 + meer * (km - 200))) '
+                formule: 'km <= 100 ? tot100 * km : tot100 * 100 + (km <= 200 ? tot200 * (km - 100) : (tot200 * 100 + meer * (km - 200)))'
             },
             'Cambio Start': {
                 variables: {
