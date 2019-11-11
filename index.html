@@ -139,8 +139,9 @@
             const maxKm = min / 60 * 120 // maximum 120 km/h
             for (const name in settings) {
                 const data = []
+                const color = settings[name].color
                 for (let km = 0; km <= maxKm; km++) data.push(bereken(name, km, min))
-                series.push({ name, data })
+                series.push({ name, data, color })
             }
             toonGrafiek(series, 'vasteTijdGrafiek', `Kost per km voor ${min}min`)
         }
