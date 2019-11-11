@@ -80,6 +80,7 @@
         }
 
         function toonGrafiek (series, id, titleText) {
+            console.log('toonGrfiek', id, document.getElementById(id))
             Highcharts.chart(id, {
                 title: { text: titleText },
                 yAxis: { title: { text: 'Kost' } },
@@ -186,7 +187,7 @@
     <div class="card large"> -->
         <!-- <label for="modal-control" class="modal-close" ></label> -->
         <!-- <h3 class="section">Resultaat</h3> -->
-        <div id="demo"></p>
+        <div id="demo"></div>
     <!-- </div>
     </div> -->
 
