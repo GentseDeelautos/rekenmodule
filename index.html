@@ -73,6 +73,8 @@
 
         function toonResultBox (km, min) {
             const lines = []
+            document.cookie=`km=${km}`
+            document.cookie=`min=${min}`
             for (naam in settings) {
                 lines.push(`<strong>${ naam }:</strong>&nbsp;${bereken(naam, km, min)}&euro;`)
             }
@@ -144,7 +146,11 @@
 
         window.onload = () => {
             if (0 <= document.cookie.indexOf('dontShowIntro=true'))
-                document.getElementById('modal-control').removeAttribute('checked')
+            document.getElementById('modal-control').removeAttribute('checked')
+            const [_, km] = (document.cookie.match(/km=(\d*)/))
+            const [__, min] = (document.cookie.match(/min=(\d*)/))
+            if (km) document.getElementById('km').value = km
+            if (min) document.getElementById('min').value = min
         }
     </script>
 </head>
@@ -172,7 +178,7 @@
         </div>
         <div class="input-group vertical">
                 <label for="min" class="doc">minuten</label>
-                <input type="number" name="min" value="15" class="doc">
+                <input type="number" name="min" id="min" value="15" class="doc">
         </div>
         <!-- <div class="input-group vertical">
             <label for="kwPer100Km">kW per 100 km</label>
