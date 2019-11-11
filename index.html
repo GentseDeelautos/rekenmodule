@@ -4,10 +4,14 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=yes"/>
     <script src="https://cdn.jsdelivr.net/npm/mathjs@6.2.3/dist/math.min.js" integrity="sha256-jnrFf6CiZ2veyKUaL7l7FHWW/ela8txaw/J7SVZzW5o=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/3.0.1/mini-default.min.css" integrity="sha256-Tb0Wikpef+a1/IiQ0gXyT9PsM654/3hNHHdxMwEhBLA=" crossorigin="anonymous" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/7.2.0/highcharts.js" integrity="sha256-pWlJ6y5bcww1f1YFl+ak3DjzWUFtLTiy1u1amuLuSfA=" crossorigin="anonymous"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/heatmap.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
     <script>
         const settings = {
             Partago: {
+                color: 'green',
                 variables: {
                     start: 30,
                     kwPerKm: 15.0 / 100, // TODO: afhankelijk van rijprofiel
@@ -17,6 +21,7 @@
                 formule: '(start + km * kwPerKm * creditsPerKw + min) * euroPerCredit'
             },
             'D&eacute;gage': {
+                color: 'blue',
                 variables: {
                     tot100: 0.32,  // prijs per km tem 100km
                     tot200: 0.28, // prijs per km van 101 tem 200km
@@ -25,6 +30,7 @@
                 formule: 'km <= 100 ? tot100 * km : tot100 * 100 + (km <= 200 ? tot200 * (km - 100) : (tot200 * 100 + meer * (km - 200)))'
             },
             'Cambio Start': {
+                color: 'orange',
                 variables: {
                     tot100: 0.35,  // prijs per km tem 100km
                     meer: 0.23, // prijs per km vanaf 100km
@@ -33,6 +39,7 @@
                 formule: '(uurPrijs * ((min - min % 60) / 60 + 1)) + (km <= 100 ? tot100 * km : (tot100 * 100 + meer * (km - 100)))'
             },
             'Cambio Bonus': {
+                color: 'pink',
                 variables: {
                     tot100: 0.26,  // prijs per km tem 100km
                     meer: 0.23, // prijs per km vanaf 100km
@@ -41,6 +48,7 @@
                 formule: '(uurPrijs * ((min - min % 60) / 60 + 1)) + (km <= 100 ? tot100 * km : (tot100 * 100 + meer * (km - 100)))'
             },
             'Cambio Comfort': {
+                color: 'red',
                 variables: {
                     tot100: 0.23,  // prijs per km tem 100km
                     meer: 0.18, // prijs per km vanaf 100km
@@ -49,6 +57,7 @@
                 formule: '(uurPrijs * ((min - min % 60) / 60 + 1)) + (km <= 100 ? tot100 * km : (tot100 * 100 + meer * (km - 100)))'
             },
             BattFan: {
+                color: 'black',
                 variables: {
                     dagPrijs: 30.25
                 },
@@ -82,7 +91,6 @@
         }
 
         function toonGrafiek (series, id, titleText) {
-            console.log('toonGrfiek', id, document.getElementById(id))
             Highcharts.chart(id, {
                 title: { text: titleText },
                 yAxis: { title: { text: 'Kost' } },
@@ -151,10 +159,37 @@
             const [__, min] = (document.cookie.match(/min=(\d*)/))
             if (km) document.getElementById('km').value = km
             if (min) document.getElementById('min').value = min
+            toonGoedkoopstePlanGrafiek()
+        }
+
+        function toonGoedkoopstePlanGrafiek () {
+            const svg = document.getElementById('goedkoopstePlanGrafiek')
+            const kmRes = 50
+            const minRes = 15
+            for (let km = 250; km >= 0; km -= kmRes) {
+                for (min = 0; min <= 24 * 60; min += minRes) {
+                    let plan = ''
+                    let price = Number.MAX_SAFE_INTEGER
+                    let color = ''
+                    // if ((120 * (min / 60.0)) < km) return
+                    Object.keys(settings).forEach(name => {
+                        const planPrice = bereken(name, km, min)
+                        if (planPrice < price) {
+                            price = planPrice
+                            plan = name
+                            color = settings[name].color
+                        }
+                    })
+                    svg.innerHTML += `<rect x="${min}" y="${250 - km}" width="${minRes}" height="${kmRes}" fill="${color}"></rect>`
+                }
+                
+            }
         }
     </script>
 </head>
 <html>
+    <svg id="goedkoopstePlanGrafiek">
+    </svg>
     <input type="checkbox" id="modal-control" class="modal" checked onclick="onCloseIntro()">
     <div>
         <div class="card">
