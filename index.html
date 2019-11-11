@@ -56,6 +56,12 @@
             }
         }
            
+        function onCloseIntro () {
+            if (document.getElementById('dont-show-anymore').checked)
+                document.cookie = 'dontShowIntro=true'
+            return true
+        }
+
         function toonResultaat () {
             const km = parseInt(document.querySelector('[name="km"]').value)
             const min = parseInt(document.querySelector('[name="min"]').value)
@@ -134,52 +140,57 @@
             const { formule, variables } = settings[name]
             return Math.round(math.evaluate(formule, { ...variables, km, min }) * 100) / 100
         }
+
+        window.onload = () => {
+            if (0 <= document.cookie.indexOf('dontShowIntro=true'))
+                document.getElementById('modal-control').removeAttribute('checked')
+        }
     </script>
 </head>
 <html>
-    <input type="checkbox" id="modal-control" class="modal" checked="true">
-        <div>
-          <div class="card">
-            <p class="section">
-                Vul hier de geplande afstand en tijd in.<br>
-                Zo kan je berekenen wat een rit met &eacute;&eacute;n van de Gentse autodeelplatformen zal kosten.
-            </p>
-            <div>
-                    <!-- <div class="input-group fluid"> -->
-                    <!-- <input type="checkbox" id="dont-show-anymore"> -->
-                    <!-- <label for="dont-show-anymore" class="doc">Nooit meer tonen.</label> -->
-                    <label for="modal-control" class="button small">OK</label>
-                    <!-- </div> -->
-            </div>
-          </div>
+    <input type="checkbox" id="modal-control" class="modal" checked onclick="onCloseIntro()">
+    <div>
+        <div class="card">
+        <p class="section">
+            Vul hier de geplande afstand en tijd in.<br>
+            Zo kan je berekenen wat een rit met &eacute;&eacute;n van de Gentse autodeelplatformen zal kosten.
+        </p>
+        <div class="container">
+                <div class="input-group fluid">
+                    <label for="modal-control" class="button small primary">OK</label>
+                    <input type="checkbox" id="dont-show-anymore">
+                    <label for="dont-show-anymore">Niet meer tonen</label>
+                </div>
         </div>
-<form>
-    <div class="input-group vertical">
-            <label for="km" class="doc">km</label>
-            <input type="number" name="km" id="km" value="10" class="doc">
+        </div>
     </div>
-    <div class="input-group vertical">
-            <label for="min" class="doc">minuten</label>
-            <input type="number" name="min" value="15" class="doc">
-    </div>
-    <!-- <div class="input-group vertical">
-        <label for="kwPer100Km">kW per 100 km</label>
-        <input type="number" name="kwPer100Km" id="kwPer100Km" value="15" class="doc">
+    <form>
+        <div class="input-group vertical">
+                <label for="km" class="doc">km</label>
+                <input type="number" name="km" id="km" value="10" class="doc">
+        </div>
+        <div class="input-group vertical">
+                <label for="min" class="doc">minuten</label>
+                <input type="number" name="min" value="15" class="doc">
+        </div>
+        <!-- <div class="input-group vertical">
+            <label for="kwPer100Km">kW per 100 km</label>
+            <input type="number" name="kwPer100Km" id="kwPer100Km" value="15" class="doc">
+        </div> -->
+    </form>
+
+    <!-- <label for="modal-control" class="button doc">toonResultaat</label> -->
+    <!-- <input type="checkbox" id="modal-control" class="modal" onchange="javascript: return toonResultaat()"> -->
+    <input type="button" id="modal-control" onclick="javascript: return toonResultaat()" value="toon resultaat">
+    <!-- <div>
+    <div class="card large"> -->
+        <!-- <label for="modal-control" class="modal-close" ></label> -->
+        <!-- <h3 class="section">Resultaat</h3> -->
+        <div id="demo"></p>
+    <!-- </div>
     </div> -->
-</form>
 
-<!-- <label for="modal-control" class="button doc">toonResultaat</label> -->
-<!-- <input type="checkbox" id="modal-control" class="modal" onchange="javascript: return toonResultaat()"> -->
-<input type="button" id="modal-control" onclick="javascript: return toonResultaat()" value="toon resultaat">
-<!-- <div>
-  <div class="card large"> -->
-    <!-- <label for="modal-control" class="modal-close" ></label> -->
-    <!-- <h3 class="section">Resultaat</h3> -->
-    <div id="demo"></p>
-  <!-- </div>
-</div> -->
-
-<div id="vasteKmGrafiek"></div>
-<div id="vasteTijdGrafiek"></div>
+    <div id="vasteKmGrafiek"></div>
+    <div id="vasteTijdGrafiek"></div>
 
 </html>
