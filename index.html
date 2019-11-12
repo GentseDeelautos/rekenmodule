@@ -15,7 +15,8 @@
                     creditsPerKw: 15,
                     euroPerCredit: 300.0 / 4800, // TODO: afhankelijk van laden
                 },
-                formule: '(start + km * kwPerKm * creditsPerKw + min) * euroPerCredit'
+                // TODO: time correctie is dagelijks...
+                formule: '(start + km * kwPerKm * creditsPerKw + ((min > 18 * 60) ? 18 * 60 : min)) * euroPerCredit'
             },
             'D&eacute;gage': {
                 color: 'blue',
