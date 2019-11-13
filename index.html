@@ -27,7 +27,7 @@
             document.cookie=`km=${km}`
             document.cookie=`min=${min}`
             for (naam in settings) {
-                lines.push(`<strong>${ naam }:</strong>&nbsp;${bereken(naam, km, min)}&euro;`)
+                lines.push(`<strong>${ naam }:</strong>&nbsp;${berekenAfgerond(naam, km, min)}&euro;`)
             }
             document.getElementById('demo').innerHTML = lines.join('<br>')
         }
@@ -73,7 +73,7 @@
             for (const name in settings) {
                 const data = []
                 const color = settings[name].color
-                for (let time = 0; time < 24 * 60 ; time += 5) data.push(bereken(name, km, time))
+                for (let time = 0; time < 24 * 60 ; time += 5) data.push(berekenAfgerond(name, km, time))
                 series.push({ name, data, color })
             }
             toonGrafiek(series, 'vasteKmGrafiek', `Kost per tijd voor ${km}km`)
@@ -85,7 +85,7 @@
             for (const name in settings) {
                 const data = []
                 const color = settings[name].color
-                for (let km = 0; km <= maxKm; km++) data.push(bereken(name, km, min))
+                for (let km = 0; km <= maxKm; km++) data.push(berekenAfgerond(name, km, min))
                 series.push({ name, data, color })
             }
             toonGrafiek(series, 'vasteTijdGrafiek', `Kost per km voor ${min}min`)
