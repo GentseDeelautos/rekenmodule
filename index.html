@@ -29,7 +29,7 @@
             for (naam in settings) {
                 lines.push(`<strong>${ naam }:</strong>&nbsp;${berekenAfgerond(naam, km, min)}&euro;`)
             }
-            document.getElementById('demo').innerHTML = lines.join('<br>')
+            document.getElementById('resultaat').innerHTML = lines.join('<br>')
         }
 
         function toonGrafiek (series, id, titleText) {
@@ -127,23 +127,10 @@
                 <label for="min" class="doc">minuten</label>
                 <input type="number" name="min" id="min" value="15" class="doc">
         </div>
-        <!-- <div class="input-group vertical">
-            <label for="kwPer100Km">kW per 100 km</label>
-            <input type="number" name="kwPer100Km" id="kwPer100Km" value="15" class="doc">
-        </div> -->
     </form>
 
-    <!-- <label for="modal-control" class="button doc">toonResultaat</label> -->
-    <!-- <input type="checkbox" id="modal-control" class="modal" onchange="javascript: return toonResultaat()"> -->
     <input type="button" id="modal-control" onclick="javascript: return toonResultaat()" value="toon resultaat">
-    <!-- <div>
-    <div class="card large"> -->
-        <!-- <label for="modal-control" class="modal-close" ></label> -->
-        <!-- <h3 class="section">Resultaat</h3> -->
-        <div id="demo"></div>
-    <!-- </div>
-    </div> -->
-
+    <div id="resultaat"></div>
     <div id="vasteKmGrafiek"></div>
     <div id="vasteTijdGrafiek"></div>
 
