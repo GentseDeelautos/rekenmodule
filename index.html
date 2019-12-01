@@ -100,36 +100,55 @@
             if (min) document.getElementById('min').value = min
         }
     </script>
+    <style>
+        form { display: flex; flex-direction: column; }
+        form > span { display: flex; flex-direction: row; align-items: baseline; }
+        .buttons { flex-grow: 1; display: flex; justify-content: flex-end; }
+        form label { width: 6em; display: inline-block; }
+        #km, #min { flex-grow: 1; min-width: 4em; }
+        span label:first-child { text-align: right; }
+        @media screen and (min-width: 42rem) {
+            #km { width: 4em; }
+            #km + label::after { content: "," }
+            #min { width: 4.5em; }
+            form { flex-direction: row; align-items: baseline; }
+            form label { display: inline; width: auto; }
+        }
+    </style>
 </head>
 <html>
     <input type="checkbox" id="modal-control" class="modal" checked onclick="onCloseIntro()">
     <div>
         <div class="card">
-        <p class="section">
-            Vul hier de geplande afstand en tijd in.<br>
-            Zo kan je berekenen wat een rit met &eacute;&eacute;n van de Gentse autodeelplatformen zal kosten.
-        </p>
-        <div class="container">
+            <p class="section">
+                Vul hier de geplande afstand en tijd in.<br>
+                Zo kan je berekenen wat een rit met &eacute;&eacute;n van de Gentse autodeelplatformen zal kosten.
+            </p>
+            <div class="container">
                 <div class="input-group row">
                     <label for="modal-control" class="button small primary col-sm-2">OK</label>
                     <input type="checkbox" id="dont-show-anymore">
                     <label for="dont-show-anymore">Niet meer tonen</label>
                 </div>
-        </div>
+            </div>
         </div>
     </div>
     <form>
-        <div class="input-group vertical">
-                <label for="km" class="doc">km</label>
-                <input type="number" name="km" id="km" value="10" class="doc">
-        </div>
-        <div class="input-group vertical">
-                <label for="min" class="doc">minuten</label>
-                <input type="number" name="min" id="min" value="15" class="doc">
-        </div>
+        <span>  
+            <label for="km">afstand</label>
+            <input type="number" name="km" id="km" value="10">
+            <label for="km">km</label>
+        </span>
+        <span>
+            <label for="min">gedurende</label>
+            <input type="number" name="min" id="min" value="15">
+            <label for="min">minuten</label>
+        </span>
+        <span class="buttons">
+            <input type="button" id="modal-control" onclick="javascript: return toonResultaat()" value="toon resultaat">
+        </span>
     </form>
 
-    <input type="button" id="modal-control" onclick="javascript: return toonResultaat()" value="toon resultaat">
     <div id="resultaat"></div>
     <div id="vasteKmGrafiek"></div>
     <div id="vasteTijdGrafiek"></div>
