@@ -94,8 +94,8 @@
         window.onload = () => {
             if (0 <= document.cookie.indexOf('dontShowIntro=true'))
             document.getElementById('modal-control').removeAttribute('checked')
-            const [_, km] = (document.cookie.match(/km=(\d*)/))
-            const [__, min] = (document.cookie.match(/min=(\d*)/))
+            const [_, km] = document.cookie.match(/km=(\d*)/) || []
+            const [__, min] = document.cookie.match(/min=(\d*)/) || [] 
             if (km) document.getElementById('km').value = km
             if (min) document.getElementById('min').value = min
         }
@@ -104,15 +104,10 @@
         form { display: flex; flex-direction: column; }
         form > span { display: flex; flex-direction: row; align-items: baseline; }
         .buttons { flex-grow: 1; display: flex; justify-content: flex-end; }
-        form label { width: 6em; display: inline-block; }
-        #km, #min { flex-grow: 1; min-width: 4em; }
-        span label:first-child { text-align: right; }
+        #km, #min { width: 5em; }
         @media screen and (min-width: 42rem) {
-            #km { width: 4em; }
             #km + label::after { content: "," }
-            #min { width: 4.5em; }
             form { flex-direction: row; align-items: baseline; }
-            form label { display: inline; width: auto; }
         }
     </style>
 </head>
