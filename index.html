@@ -131,16 +131,16 @@
   <form>
     <span>  
       <label for="distance">afstand</label>
-      <input type="number" id="distance" value="10" inputmode="numeric" pattern="[0-9]*">
+      <input type="number" id="distance" value="10" inputmode="decimal" pattern="[0-9]*" novalidate>
       <label for="distance">km</label>
     </span>
     <span>
       <label for="duration">gedurende</label>
-      <input type="number" id="duration" value="15" inputmode="numeric" pattern="[0-9]*">
+      <input type="number" id="duration" value="15" inputmode="decimal" pattern="[0-9]*" novalidate>
       <label for="duration">minuten</label>
     </span>
     <span class="buttons">
-      <input type="button" id="modal-control" onclick="javascript: return showResult()" value="toon resultaat">
+      <input type="submit" id="modal-control" onclick="javascript: return showResult()" value="toon resultaat">
     </span>
   </form>
 
