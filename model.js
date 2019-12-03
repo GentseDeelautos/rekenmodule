@@ -56,11 +56,10 @@ const settings = {
 }
 
 
-function bereken (name, km, min) {
-    const { formule, variables } = settings[name]
+function bereken ({ name, km, min }) {
+    const { formule, variables } = settings[name] || {}
     return math.evaluate(formule, { ...variables, km, min })
 }
-function berekenAfgerond (name, km, min) {
-    const { formule, variables } = settings[name]
-    return Math.round(bereken(name, km, min) * 100) / 100
+function berekenAfgerond (opties) {
+    return Math.round(bereken(opties) * 100) / 100
 }
