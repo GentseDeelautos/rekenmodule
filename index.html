@@ -34,7 +34,7 @@
 
     function showGraph (series, id, titleText) {
       Highcharts.chart(id, {
-        title: { text: titleText },
+        title: { text: titleText, useHTML: true },
         yAxis: { title: { text: 'Kost' } },
         legend: {
           useHTML: true,
@@ -76,7 +76,7 @@
         for (let duration = 0; duration < 24 * 60 ; duration += 5) data.push(calculateRounded({ name, distance, duration }))
         series.push({ name, data, color })
       }
-      showGraph(series, 'fixedDistanceGraph', `Kost per tijd voor ${distance}km`)
+      showGraph(series, 'fixedDistanceGraph', `Kost per tijd voor ${distance}&thinsp;km`)
     }
 
     function showFixedTimeGraph (distance, duration) {
@@ -88,7 +88,7 @@
         for (let distance = 0; distance <= maxKm; distance++) data.push(calculateRounded({ name, distance, duration }))
         series.push({ name, data, color })
       }
-      showGraph(series, 'fixedTimeGraph', `Kost per afstand voor ${duration}min`)
+      showGraph(series, 'fixedTimeGraph', `Kost per afstand voor ${duration}&thinsp;min`)
     }
 
     window.onload = () => {
