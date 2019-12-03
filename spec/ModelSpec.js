@@ -6,7 +6,7 @@ describe('Model', () => {
             this.creditsPerMinute = 1
             this.creditPerKWh = 15
             this.creditsPerKm = this.creditPerKWh * this.kWhPerKm
-            this.params = { name: 'Partago', km: 0, min: 0 }
+            this.params = { name: 'Partago', distance: 0, duration: 0 }
         })
         describe('grote bundel', () => {
             beforeEach(() => {
@@ -14,22 +14,22 @@ describe('Model', () => {
                 this.startupFee = this.pricePerCredit * this.startupCredits
             })
             it('has a startup fee', () => {
-                expect(bereken(this.params)).toEqual(this.startupFee)
+                expect(calculate(this.params)).toEqual(this.startupFee)
             })
-            it('has a price per km', () => {
-                expect(bereken({ ...this.params, km: 100 }))
+            it('has a price per distance', () => {
+                expect(calculate({ ...this.params, distance: 100 }))
                     .toEqual(this.startupFee + 100 * this.creditsPerKm * this.pricePerCredit)
             })
             it('has a price per minute', () => {
-                expect(bereken({ ...this.params, min: 18 * 60 }))
+                expect(calculate({ ...this.params, duration: 18 * 60 }))
                     .toEqual(this.startupFee + (18 * 60) * this.creditsPerMinute * this.pricePerCredit)
             })
             it('has free time per day', () => {
-                expect(bereken({ ...this.params, min: 18 * 60 + 1 }))
+                expect(calculate({ ...this.params, duration: 18 * 60 + 1 }))
                     .toEqual(this.startupFee + (18 * 60) * this.creditsPerMinute * this.pricePerCredit)
             })
             xit('has limited free time per day', () => {
-                expect(bereken({ ...this.params, min: 24 * 60 + 1 })).toEqual(this.startupFee + (18 * 60 + 1) * this.creditsPerMinute * this.pricePerCredit)
+                expect(calculate({ ...this.params, duration: 24 * 60 + 1 })).toEqual(this.startupFee + (18 * 60 + 1) * this.creditsPerMinute * this.pricePerCredit)
             })
         })
     })

@@ -13,26 +13,26 @@
             return true
         }
 
-        function toonResultaat () {
-            const km = parseInt(document.querySelector('[name="km"]').value)
-            const min = parseInt(document.querySelector('[name="min"]').value)
-            toonResultBox(km, min)
-            toonVasteKmGrafiek(km)
-            toonVasteTijdGrafiek(km, min)
+        function showResult () {
+            const distance = parseInt(document.getElementById('distance').value)
+            const duration = parseInt(document.getElementById('duration').value)
+            showResultBox(distance, duration)
+            showFixedDistanceGraph(distance)
+            showFixedTimeGraph(distance, duration)
             return false
         }
 
-        function toonResultBox (km, min) {
+        function showResultBox (distance, duration) {
             const lines = []
-            document.cookie=`km=${km}`
-            document.cookie=`min=${min}`
+            document.cookie=`distance=${distance}`
+            document.cookie=`duration=${duration}`
             for (name in settings) {
-                lines.push(`<strong>${ name }:</strong>&nbsp;${berekenAfgerond({ name, km, min })}&euro;`)
+                lines.push(`<strong>${ name }:</strong>&nbsp;${calculateRounded({ name, distance, duration })}&euro;`)
             }
-            document.getElementById('resultaat').innerHTML = lines.join('<br>')
+            document.getElementById('result').innerHTML = lines.join('<br>')
         }
 
-        function toonGrafiek (series, id, titleText) {
+        function showGraph (series, id, titleText) {
             Highcharts.chart(id, {
                 title: { text: titleText },
                 yAxis: { title: { text: 'Kost' } },
@@ -68,45 +68,45 @@
             });
         }
 
-        function toonVasteKmGrafiek (km) {
+        function showFixedDistanceGraph (distance) {
             const series = []
             for (const name in settings) {
                 const data = []
                 const color = settings[name].color
-                for (let min = 0; min < 24 * 60 ; min += 5) data.push(berekenAfgerond({ name, km, min }))
+                for (let duration = 0; duration < 24 * 60 ; duration += 5) data.push(calculateRounded({ name, distance, duration }))
                 series.push({ name, data, color })
             }
-            toonGrafiek(series, 'vasteKmGrafiek', `Kost per tijd voor ${km}km`)
+            showGraph(series, 'fixedDistanceGraph', `Kost per tijd voor ${distance}km`)
         }
 
-        function toonVasteTijdGrafiek (km, min) {
+        function showFixedTimeGraph (distance, duration) {
             const series = []
-            const maxKm = min / 60 * 120 // maximum 120 km/h
+            const maxKm = duration / 60 * 120 // maximum 120 distance/h
             for (const name in settings) {
                 const data = []
                 const color = settings[name].color
-                for (let km = 0; km <= maxKm; km++) data.push(berekenAfgerond({ name, km, min }))
+                for (let distance = 0; distance <= maxKm; distance++) data.push(calculateRounded({ name, distance, duration }))
                 series.push({ name, data, color })
             }
-            toonGrafiek(series, 'vasteTijdGrafiek', `Kost per km voor ${min}min`)
+            showGraph(series, 'fixedTimeGraph', `Kost per afstand voor ${duration}min`)
         }
 
         window.onload = () => {
             if (0 <= document.cookie.indexOf('dontShowIntro=true'))
             document.getElementById('modal-control').removeAttribute('checked')
-            const [_, km] = document.cookie.match(/km=(\d*)/) || []
-            const [__, min] = document.cookie.match(/min=(\d*)/) || [] 
-            if (km) document.getElementById('km').value = km
-            if (min) document.getElementById('min').value = min
+            const [_, distance] = document.cookie.match(/distance=(\d*)/) || []
+            const [__, duration] = document.cookie.match(/duration=(\d*)/) || [] 
+            if (distance) document.getElementById('distance').value = distance
+            if (duration) document.getElementById('duration').value = duration
         }
     </script>
     <style>
         form { display: flex; flex-direction: column; }
         form > span { display: flex; flex-direction: row; align-items: baseline; }
         .buttons { flex-grow: 1; display: flex; justify-content: flex-end; }
-        #km, #min { width: 5em; }
+        #distance, #duration { width: 5em; }
         @media screen and (min-width: 42rem) {
-            #km + label::after { content: "," }
+            #distance + label::after { content: "," }
             form { flex-direction: row; align-items: baseline; }
         }
     </style>
@@ -130,22 +130,22 @@
     </div>
     <form>
         <span>  
-            <label for="km">afstand</label>
-            <input type="number" name="km" id="km" value="10" inputmode="numeric" pattern="[0-9]*">
-            <label for="km">km</label>
+            <label for="distance">afstand</label>
+            <input type="number" id="distance" value="10" inputmode="numeric" pattern="[0-9]*">
+            <label for="distance">distance</label>
         </span>
         <span>
-            <label for="min">gedurende</label>
-            <input type="number" name="min" id="min" value="15" inputmode="numeric" pattern="[0-9]*">
-            <label for="min">minuten</label>
+            <label for="duration">gedurende</label>
+            <input type="number" id="duration" value="15" inputmode="numeric" pattern="[0-9]*">
+            <label for="duration">minuten</label>
         </span>
         <span class="buttons">
-            <input type="button" id="modal-control" onclick="javascript: return toonResultaat()" value="toon resultaat">
+            <input type="button" id="modal-control" onclick="javascript: return showResult()" value="toon resultaat">
         </span>
     </form>
 
-    <div id="resultaat"></div>
-    <div id="vasteKmGrafiek"></div>
-    <div id="vasteTijdGrafiek"></div>
+    <div id="result"></div>
+    <div id="fixedDistanceGraph"></div>
+    <div id="fixedTimeGraph"></div>
 
 </html>

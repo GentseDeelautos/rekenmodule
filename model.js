@@ -8,58 +8,58 @@ const settings = {
             euroPerCredit: 300.0 / 4800, // TODO: afhankelijk van laden
         },
         // TODO: time correctie is dagelijks...
-        formule: '(start + km * kwPerKm * creditsPerKw + ((min > 18 * 60) ? 18 * 60 : min)) * euroPerCredit'
+        formula: '(start + distance * kwPerKm * creditsPerKw + ((duration > 18 * 60) ? 18 * 60 : duration)) * euroPerCredit'
     },
     'D&eacute;gage': {
         color: 'blue',
         variables: {
-            tot100: 0.32,  // prijs per km tem 100km
-            tot200: 0.28, // prijs per km van 101 tem 200km
-            meer: 0.24 // prijs per km vanaf 201km
+            to100: 0.32,  // prijs per distance tem 100km
+            to200: 0.28, // prijs per distance van 101 tem 200km
+            more: 0.24 // prijs per distance vanaf 201km
         },
-        formule: 'km <= 100 ? tot100 * km : tot100 * 100 + (km <= 200 ? tot200 * (km - 100) : (tot200 * 100 + meer * (km - 200)))'
+        formula: 'distance <= 100 ? to100 * distance : to100 * 100 + (distance <= 200 ? to200 * (distance - 100) : (to200 * 100 + more * (distance - 200)))'
     },
     'Cambio Start': {
         color: 'pink',
         variables: {
-            tot100: 0.35,  // prijs per km tem 100km
-            meer: 0.23, // prijs per km vanaf 100km
-            uurPrijs: 1.75
+            to100: 0.35,  // prijs per distance tem 100km
+            more: 0.23, // prijs per distance vanaf 100km
+            costPerHour: 1.75
         },
-        formule: '(uurPrijs * ((min - min % 60) / 60 + 1)) + (km <= 100 ? tot100 * km : (tot100 * 100 + meer * (km - 100)))'
+        formula: '(costPerHour * ((duration - duration % 60) / 60 + 1)) + (distance <= 100 ? to100 * distance : (to100 * 100 + more * (distance - 100)))'
     },
     'Cambio Bonus': {
         color: 'orange',
         variables: {
-            tot100: 0.26,  // prijs per km tem 100km
-            meer: 0.23, // prijs per km vanaf 100km
-            uurPrijs: 1.75
+            to100: 0.26,  // prijs per distance tem 100km
+            more: 0.23, // prijs per distance vanaf 100km
+            costPerHour: 1.75
         },
-        formule: '(uurPrijs * ((min - min % 60) / 60 + 1)) + (km <= 100 ? tot100 * km : (tot100 * 100 + meer * (km - 100)))'
+        formula: '(costPerHour * ((duration - duration % 60) / 60 + 1)) + (distance <= 100 ? to100 * distance : (to100 * 100 + more * (distance - 100)))'
     },
     'Cambio Comfort': {
         color: 'red',
         variables: {
-            tot100: 0.23,  // prijs per km tem 100km
-            meer: 0.18, // prijs per km vanaf 100km
-            uurPrijs: 1.55
+            to100: 0.23,  // prijs per distance tem 100km
+            more: 0.18, // prijs per distance vanaf 100km
+            costPerHour: 1.55
         },
-        formule: '(uurPrijs * ((min - min % 60) / 60 + 1)) + (km <= 100 ? tot100 * km : (tot100 * 100 + meer * (km - 100)))'
+        formula: '(costPerHour * ((duration - duration % 60) / 60 + 1)) + (distance <= 100 ? to100 * distance : (to100 * 100 + more * (distance - 100)))'
     },
     BattFan: {
         color: 'purple',
         variables: {
-            dagPrijs: 30.25
+            costPerDay: 30.25
         },
-        formule: 'dagPrijs + dagPrijs * (min - min % (60 * 24)) / (60 * 24)'
+        formula: 'costPerDay + costPerDay * (duration - duration % (60 * 24)) / (60 * 24)'
     }
 }
 
 
-function bereken ({ name, km, min }) {
-    const { formule, variables } = settings[name] || {}
-    return math.evaluate(formule, { ...variables, km, min })
+function calculate ({ name, distance, duration }) {
+    const { formula, variables } = settings[name] || {}
+    return math.evaluate(formula, { ...variables, distance, duration })
 }
-function berekenAfgerond (opties) {
-    return Math.round(bereken(opties) * 100) / 100
+function calculateRounded (opties) {
+    return Math.round(calculate(opties) * 100) / 100
 }
