@@ -1,11 +1,22 @@
 const settings = {
-  Partago: {
+  'Partago grote bundel': {
     color: 'lime',
     variables: {
       start: 30,
       kwPerKm: 15.0 / 100, // TODO: afhankelijk van rijprofiel
       creditsPerKw: 15,
       euroPerCredit: 300.0 / 4800, // TODO: afhankelijk van laden
+    },
+    // TODO: time correctie is dagelijks...
+    formula: '(start + distance * kwPerKm * creditsPerKw + ((duration > 18 * 60) ? 18 * 60 : duration)) * euroPerCredit'
+  },
+  'Partago kleine bundel': {
+    color: 'yellow',
+    variables: {
+      start: 30,
+      kwPerKm: 15.0 / 100, // TODO: afhankelijk van rijprofiel
+      creditsPerKw: 15,
+      euroPerCredit: 75.0 / 1000, // TODO: afhankelijk van laden
     },
     // TODO: time correctie is dagelijks...
     formula: '(start + distance * kwPerKm * creditsPerKw + ((duration > 18 * 60) ? 18 * 60 : duration)) * euroPerCredit'

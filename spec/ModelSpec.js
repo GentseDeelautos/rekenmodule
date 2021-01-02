@@ -6,7 +6,7 @@ describe('Model', () => {
       this.creditsPerMinute = 1
       this.creditPerKWh = 15
       this.creditsPerKm = this.creditPerKWh * this.kWhPerKm
-      this.params = { name: 'Partago', distance: 0, duration: 0 }
+      this.params = { name: 'Partago grote bundel', distance: 0, duration: 0 }
     })
     describe('grote bundel', () => {
       beforeEach(() => {
