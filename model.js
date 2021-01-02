@@ -5,7 +5,7 @@ const settings = {
       start: 30,
       kwPerKm: 15.0 / 100, // TODO: afhankelijk van rijprofiel
       creditsPerKw: 15,
-      euroPerCredit: 300.0 / 4800, // TODO: afhankelijk van laden
+      euroPerCredit: 300.0 / 4800,
     },
     // TODO: time correctie is dagelijks...
     formula: '(start + distance * kwPerKm * creditsPerKw + ((duration > 18 * 60) ? 18 * 60 : duration)) * euroPerCredit'
@@ -16,7 +16,29 @@ const settings = {
       start: 30,
       kwPerKm: 15.0 / 100, // TODO: afhankelijk van rijprofiel
       creditsPerKw: 15,
-      euroPerCredit: 75.0 / 1000, // TODO: afhankelijk van laden
+      euroPerCredit: 75.0 / 1000,
+    },
+    // TODO: time correctie is dagelijks...
+    formula: '(start + distance * kwPerKm * creditsPerKw + ((duration > 18 * 60) ? 18 * 60 : duration)) * euroPerCredit'
+  },
+  'Partago klein abonnement': {
+    color: 'lime',
+    variables: {
+      start: 30,
+      kwPerKm: 15.0 / 100, // TODO: afhankelijk van rijprofiel
+      creditsPerKw: 15,
+      euroPerCredit: 95.0 / 1800,
+    },
+    // TODO: time correctie is dagelijks...
+    formula: '(start + distance * kwPerKm * creditsPerKw + ((duration > 18 * 60) ? 18 * 60 : duration)) * euroPerCredit'
+  },
+  'Partago groot abonnement': {
+    color: 'grey',
+    variables: {
+      start: 30,
+      kwPerKm: 15.0 / 100, // TODO: afhankelijk van rijprofiel
+      creditsPerKw: 15,
+      euroPerCredit: 150.0 / 3000,
     },
     // TODO: time correctie is dagelijks...
     formula: '(start + distance * kwPerKm * creditsPerKw + ((duration > 18 * 60) ? 18 * 60 : duration)) * euroPerCredit'
