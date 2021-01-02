@@ -4,13 +4,14 @@ describe('Formulas', () => {
       beforeAll(async () => {
         const response = await fetch('https://www.partago.be/tarieven.html')
         const frag = document.createRange().createContextualFragment(await response.text())
-        this.text = frag.querySelector('h2.wsite-content-title:nth-child(4) + div td:nth-child(4)').textContent
-        // TODO: zoek op titel ipv. op css
+        this.text = frag.textContent
+          .split('Stap 2 Koop jouw bundel of activeer een abonnement')[1]
+          .split('Stap 3 Om het leven gemakkelijker te maken')[0]
       })
       it('matches opstartcredits', () =>
-        expect(this.text).toContain(' 30 credits bij reserveren'))
+        expect(this.text).toContain(` ${settings.Partago.variables.start} credits bij reserveren`))
       it('matches credits per kW', () =>
-        expect(this.text).toContain(' 15 credits per verbruikte kWh'))
+        expect(this.text).toContain(` ${settings.Partago.variables.creditsPerKw} credits per verbruikte kWh`))
     })
   })
 })
