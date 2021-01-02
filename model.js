@@ -43,6 +43,15 @@ const settings = {
     // TODO: time correctie is dagelijks...
     formula: '(start + distance * kwPerKm * creditsPerKw + ((duration > 18 * 60) ? 18 * 60 : duration)) * euroPerCredit'
   },
+  'Partago coop': {
+    color: 'brown',
+    variables: {
+      kwPerKm: 15.0 / 100, // TODO: afhankelijk van rijprofiel
+      euroPerKw: 1.4
+    },
+    // TODO: time correctie is dagelijks...
+    formula: 'distance * kwPerKm * euroPerKw'
+  },
   'D&eacute;gage': {
     color: 'blue',
     variables: {

@@ -15,10 +15,12 @@ const expectImageToMatch = async (refLocator, url) => {
 
 describe('Formulas', () => {
   describe('Partago', () => {
+    beforeAll(async () => {
+      const response = await fetch('https://www.partago.be/tarieven.html')
+      this.frag = document.createRange().createContextualFragment(await response.text())
+    })
     describe('abonnement en bundel', () => {
       beforeAll(async () => {
-        const response = await fetch('https://www.partago.be/tarieven.html')
-        this.frag = document.createRange().createContextualFragment(await response.text())
         this.text = this.frag.textContent
           .split('Stap 2 Koop jouw bundel of activeer een abonnement')[1]
           .split('Stap 3 Om het leven gemakkelijker te maken')[0]
@@ -71,6 +73,15 @@ describe('Formulas', () => {
           expectImageToBeLoaded(frag, url)
           await expectImageToMatch('#partagoGrootAbonnement', url)
         })
+      })
+    })
+    describe('coop formule', () => {
+      const variables = settings['Partago coop'].variables
+      it('still has price of 01/01/2010', () => {
+        const text = this.frag.textContent
+          .split('Wil je geen tijdstress?')[1]
+          .split('Elke maand betaal je de gemaakte ritten met domiciliëring')[0]
+        expect(text).toContain(`${variables.euroPerKw.toLocaleString('nl-BE')}0 euro per kWh.`)
       })
     })
   })
