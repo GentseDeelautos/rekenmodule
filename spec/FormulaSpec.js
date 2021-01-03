@@ -108,10 +108,13 @@ describe('Formulas', () => {
       beforeAll(() => {
         this.text = this.frag.textContent.split('Uur-en dagpakketten')[1]
         this.textBlocks = this.text.split('Kies in de app')})
-      describe('overtime', () =>
+      describe('over distance', () =>
         it('still costs the same as of 01/01/2021', 
           () => expect(this.text).toContain('Als je meer rijdt dan de kilometers in jouw pakket, zal elke kilometer daarna € 0,25/km kosten')))
-      describe('3 uur', () =>
+      describe('over time', () =>
+        it('still costs the same as of 01/01/2021', 
+          () => expect(this.text).toContain('Anders rijd je verder aan € 0,25/minuut.')))
+        describe('3 uur', () =>
         it('still means the same as of 01/01/2021', () => expect(this.textBlocks[0]).toMatch(/35 Euro\s*3uur[\s\S]*incl. 100 km/)))
       describe('5 uur', () =>
         it('still means the same as of 01/01/2021', () => expect(this.textBlocks[1]).toMatch(/45 Euro\s*5uur[\s\S]*incl. 150 km/)))
