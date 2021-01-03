@@ -104,7 +104,7 @@ describe('Formulas', () => {
       describe('150 euro', () => 
         it('still has the value of 01/01/2021', () => expect(this.textBlocks[2]).toMatch(/150 Euro\s*600min/)))
     })
-    describe('uur en dagpakketten', () => {
+    describe('uur- en dagpakketten', () => {
       beforeAll(() => {
         this.text = this.frag.textContent.split('Uur-en dagpakketten')[1]
         this.textBlocks = this.text.split('Kies in de app')})

@@ -1,6 +1,5 @@
 const settings = {
   'Partago grote bundel': {
-    color: 'lime',
     variables: {
       start: 30,
       kwPerKm: 15.0 / 100, // TODO: afhankelijk van rijprofiel
@@ -11,7 +10,6 @@ const settings = {
     formula: '(start + distance * kwPerKm * creditsPerKw + ((duration > 18 * 60) ? 18 * 60 : duration)) * euroPerCredit'
   },
   'Partago kleine bundel': {
-    color: 'yellow',
     variables: {
       start: 30,
       kwPerKm: 15.0 / 100, // TODO: afhankelijk van rijprofiel
@@ -22,7 +20,6 @@ const settings = {
     formula: '(start + distance * kwPerKm * creditsPerKw + ((duration > 18 * 60) ? 18 * 60 : duration)) * euroPerCredit'
   },
   'Partago klein abonnement': {
-    color: 'lime',
     variables: {
       start: 30,
       kwPerKm: 15.0 / 100, // TODO: afhankelijk van rijprofiel
@@ -33,7 +30,6 @@ const settings = {
     formula: '(start + distance * kwPerKm * creditsPerKw + ((duration > 18 * 60) ? 18 * 60 : duration)) * euroPerCredit'
   },
   'Partago groot abonnement': {
-    color: 'grey',
     variables: {
       start: 30,
       kwPerKm: 15.0 / 100, // TODO: afhankelijk van rijprofiel
@@ -44,7 +40,6 @@ const settings = {
     formula: '(start + distance * kwPerKm * creditsPerKw + ((duration > 18 * 60) ? 18 * 60 : duration)) * euroPerCredit'
   },
   'Partago coop': {
-    color: 'brown',
     variables: {
       kwPerKm: 15.0 / 100, // TODO: afhankelijk van rijprofiel
       euroPerKw: 1.4
@@ -53,7 +48,6 @@ const settings = {
     formula: 'distance * kwPerKm * euroPerKw'
   },
   'D&eacute;gage': {
-    color: 'blue',
     variables: {
       to100: 0.32,  // prijs per distance tem 100km
       to200: 0.28, // prijs per distance van 101 tem 200km
@@ -62,7 +56,6 @@ const settings = {
     formula: 'distance <= 100 ? to100 * distance : to100 * 100 + (distance <= 200 ? to200 * (distance - 100) : (to200 * 100 + more * (distance - 200)))'
   },
   'Cambio Start': {
-    color: 'pink',
     variables: {
       to100: 0.35,  // prijs per distance tem 100km
       more: 0.23, // prijs per distance vanaf 100km
@@ -71,7 +64,6 @@ const settings = {
     formula: '(costPerHour * ((duration - duration % 60) / 60 + 1)) + (distance <= 100 ? to100 * distance : (to100 * 100 + more * (distance - 100)))'
   },
   'Cambio Bonus': {
-    color: 'orange',
     variables: {
       to100: 0.26,  // prijs per distance tem 100km
       more: 0.23, // prijs per distance vanaf 100km
@@ -80,7 +72,6 @@ const settings = {
     formula: '(costPerHour * ((duration - duration % 60) / 60 + 1)) + (distance <= 100 ? to100 * distance : (to100 * 100 + more * (distance - 100)))'
   },
   'Cambio Comfort': {
-    color: 'red',
     variables: {
       to100: 0.23,  // prijs per distance tem 100km
       more: 0.18, // prijs per distance vanaf 100km
@@ -89,7 +80,6 @@ const settings = {
     formula: '(costPerHour * ((duration - duration % 60) / 60 + 1)) + (distance <= 100 ? to100 * distance : (to100 * 100 + more * (distance - 100)))'
   },
   BattFan: {
-    color: 'purple',
     variables: {
       costPerDay: 30.25
     },

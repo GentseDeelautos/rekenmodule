@@ -6,6 +6,17 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/3.0.1/mini-default.min.css" integrity="sha256-Tb0Wikpef+a1/IiQ0gXyT9PsM654/3hNHHdxMwEhBLA=" crossorigin="anonymous" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/7.2.0/highcharts.js" integrity="sha256-pWlJ6y5bcww1f1YFl+ak3DjzWUFtLTiy1u1amuLuSfA=" crossorigin="anonymous"></script>
   <script src="./model.js"></script>
+  <script src="https://d3js.org/d3.v4.min.js"> 
+  </script> 
+  <script src= 
+      "https://d3js.org/d3-color.v1.min.js"> 
+  </script> 
+  <script src= 
+      "https://d3js.org/d3-interpolate.v1.min.js"> 
+  </script> 
+  <script src= 
+      "https://d3js.org/d3- scale-chromatic.v1.min.js"> 
+  </script> 
   <script>
     function onCloseIntro () {
       if (document.getElementById('dont-show-anymore').checked)
@@ -70,24 +81,24 @@
 
     function showFixedDistanceGraph (distance) {
       const series = []
-      for (const name in settings) {
+      Object.entries(settings).forEach(([name], i, array) => {
         const data = []
-        const color = settings[name].color
+        const color = d3.interpolateRainbow(i/array.length) 
         for (let duration = 0; duration < 24 * 60 ; duration += 5) data.push(calculateRounded({ name, distance, duration }))
         series.push({ name, data, color })
-      }
+      })
       showGraph(series, 'fixedDistanceGraph', `Kost per tijd voor ${distance}&thinsp;km`)
     }
 
     function showFixedTimeGraph (distance, duration) {
       const series = []
       const maxKm = duration / 60 * 120 // maximum 120 distance/h
-      for (const name in settings) {
+      Object.entries(settings).forEach(([name], i, array) => {
         const data = []
-        const color = settings[name].color
+        const color = d3.interpolateRainbow(i/array.length) 
         for (let distance = 0; distance <= maxKm; distance++) data.push(calculateRounded({ name, distance, duration }))
         series.push({ name, data, color })
-      }
+      })
       showGraph(series, 'fixedTimeGraph', `Kost per afstand voor ${duration}&thinsp;min`)
     }
 
