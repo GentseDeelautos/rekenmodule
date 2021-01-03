@@ -84,7 +84,29 @@ const settings = {
       costPerDay: 30.25
     },
     formula: 'costPerDay + costPerDay * (duration - duration % (60 * 24)) / (60 * 24)'
-  }
+  },
+  'GreenMobility prepaid 25 euro': {
+    variables: {
+      price: 25,
+      timeMin: 75
+    },
+    formula: 'duration * price / timeMin'
+  },
+  'GreenMobility prepaid 50 euro': {
+    variables: {
+      price: 50,
+      timeMin: 175
+    },
+    formula: 'duration * price / timeMin'
+  },
+  'GreenMobility prepaid 150 euro': {
+    variables: {
+      price: 150,
+      timeMin: 600
+    },
+    formula: 'duration * price / timeMin'
+  },
+
 }
 
 function calculate ({ name, distance, duration }) {
