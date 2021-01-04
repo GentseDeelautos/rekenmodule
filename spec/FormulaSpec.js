@@ -97,37 +97,44 @@ describe('Formulas', () => {
             .split('Uur-en dagpakketten')[0]
         this.textBlocks = this.text.split('Kies in de app')
       })
+      const expectCorrectFormulaValuesFor = (index, name) => {
+        const { price, timeMin } = settings[`GreenMobility prepaid ${name}`].variables
+        expect(this.textBlocks[index]).toMatch(new RegExp(`${price} Euro\\s*${timeMin}min`))
+      }
       describe('25 euro', () => 
-        it('still has the value of 01/01/2021', () => expect(this.textBlocks[0]).toMatch(/25 Euro\s*75min/)))
+        it('still has the value of 01/01/2021', () => expectCorrectFormulaValuesFor(0, '25 euro')))
       describe('50 euro', () => 
-        it('still has the value of 01/01/2021', () => expect(this.textBlocks[1]).toMatch(/50 Euro\s*175min/)))
+        it('still has the value of 01/01/2021', () => expectCorrectFormulaValuesFor(1, '50 euro')))
       describe('150 euro', () => 
-        it('still has the value of 01/01/2021', () => expect(this.textBlocks[2]).toMatch(/150 Euro\s*600min/)))
+        it('still has the value of 01/01/2021', () => expectCorrectFormulaValuesFor(2, '150 euro')))
     })
     describe('uur- en dagpakketten', () => {
       beforeAll(() => {
         this.text = this.frag.textContent.split('Uur-en dagpakketten')[1]
         this.textBlocks = this.text.split('Kies in de app')})
+      const { variables: { overDistancePerKm, overTimeCost } } = settings['GreenMobility 3 uur pakket']
       describe('over distance', () =>
         it('still costs the same as of 01/01/2021', 
-          () => expect(this.text).toContain('Als je meer rijdt dan de kilometers in jouw pakket, zal elke kilometer daarna € 0,25/km kosten')))
+          () => expect(this.text).toContain(`Als je meer rijdt dan de kilometers in jouw pakket, zal elke kilometer daarna € ${overDistancePerKm.toLocaleString('nl-BE')}/km kosten`)))
       describe('over time', () =>
         it('still costs the same as of 01/01/2021', 
-          () => expect(this.text).toContain('Anders rijd je verder aan € 0,25/minuut.')))
-        describe('3 uur', () =>
-        it('still means the same as of 01/01/2021', () => expect(this.textBlocks[0]).toMatch(/35 Euro\s*3uur[\s\S]*incl. 100 km/)))
-      describe('5 uur', () =>
-        it('still means the same as of 01/01/2021', () => expect(this.textBlocks[1]).toMatch(/45 Euro\s*5uur[\s\S]*incl. 150 km/)))
-      describe('10 uur', () =>
-        it('still means the same as of 01/01/2021', () => expect(this.textBlocks[2]).toMatch(/60 Euro\s*10uur[\s\S]*incl. 150 km/)))
-      describe('1 dag', () =>
-        it('still means the same as of 01/01/2021', () => expect(this.textBlocks[3]).toMatch(/75 Euro\s*1dag[\s\S]*incl. 200 km/)))
-      describe('2 dagen', () =>
-        it('still means the same as of 01/01/2021', () => expect(this.textBlocks[4]).toMatch(/125 Euro\s*2dagen[\s\S]*incl. 400 km/)))
-      describe('3 dagen', () =>
-        it('still means the same as of 01/01/2021', () => expect(this.textBlocks[5]).toMatch(/175 Euro\s*3dagen[\s\S]*incl. 600 km/)))
-      describe('7 dagen', () =>
-        it('still means the same as of 01/01/2021', () => expect(this.textBlocks[6]).toMatch(/350 Euro\s*7dagen[\s\S]*incl. 1000 km/)))
+          () => expect(this.text).toContain(`Anders rijd je verder aan € ${overTimeCost.toLocaleString('nl-BE')}/minuut.`)))
+      const expectCorrectValuesFor = (index, name) => {
+        const { variables: { price, maxDistance, maxTime } } = settings[`GreenMobility ${name} pakket`]
+        const duration = moment.duration(maxTime, 'minutes')
+        const unit = duration.locale('nl').humanize().split(' ')[1]
+        const unit2 = duration.locale('en').humanize().split(' ')[1]
+
+        const period = duration.locale('en').get(unit2) + unit
+        expect(this.textBlocks[index]).toMatch(new RegExp(`${price} Euro\\s*${period}[\\s\\S]*incl. ${maxDistance} km`))
+      }  
+      describe('3 uur', () => it('still means the same as of 01/01/2021', () => expectCorrectValuesFor(0, '3 uur')))
+      describe('5 uur', () => it('still means the same as of 01/01/2021', () => expectCorrectValuesFor(1, '5 uur')))
+      describe('10 uur', () => it('still means the same as of 01/01/2021', () => expectCorrectValuesFor(2, '10 uur')))
+      describe('1 dag', () => it('still means the same as of 01/01/2021', () => expectCorrectValuesFor(3, '1 dag')))
+      describe('2 dagen', () => it('still means the same as of 01/01/2021', () => expectCorrectValuesFor(4, '2 dagen')))
+      describe('3 dagen', () => it('still means the same as of 01/01/2021', () => expectCorrectValuesFor(5, '3 dagen')))
+      describe('7 dagen', () => it('still means the same as of 01/01/2021', () => expectCorrectValuesFor(6, '7 dagen')))
     })
   })
 })

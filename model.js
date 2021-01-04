@@ -1,3 +1,19 @@
+const PartagoBundleFormula = '(start + distance * kwPerKm * creditsPerKw + ((duration > 18 * 60) ? 18 * 60 : duration)) * euroPerCredit'
+const PartagoAbonnementFormula = '(start + distance * kwPerKm * creditsPerKw + ((duration > 18 * 60) ? 18 * 60 : duration)) * euroPerCredit'
+
+const CambioFormula = '(costPerHour * ((duration - duration % 60) / 60 + 1)) + (distance <= 100 ? to100 * distance : (to100 * 100 + more * (distance - 100)))'
+
+const GreenMobilityPrepaidFormula = 'duration * price / timeMin'
+const GreenMobilityPakketFormula = 
+  '(distance > maxDistance ? (distance - maxDistance) * overDistancePerKm: 0 ) + \
+  (duration > maxTime ? (duration - maxTime) * overTimeCost : 0) + \
+  price'
+
+const GreenMobilityExcessionCost = {
+  overDistancePerKm: 0.25,
+  overTimeCost: 0.25
+}
+
 const settings = {
   'Partago grote bundel': {
     variables: {
@@ -7,7 +23,7 @@ const settings = {
       euroPerCredit: 300.0 / 4800,
     },
     // TODO: time correctie is dagelijks...
-    formula: '(start + distance * kwPerKm * creditsPerKw + ((duration > 18 * 60) ? 18 * 60 : duration)) * euroPerCredit'
+    formula: PartagoBundleFormula
   },
   'Partago kleine bundel': {
     variables: {
@@ -17,7 +33,7 @@ const settings = {
       euroPerCredit: 75.0 / 1000,
     },
     // TODO: time correctie is dagelijks...
-    formula: '(start + distance * kwPerKm * creditsPerKw + ((duration > 18 * 60) ? 18 * 60 : duration)) * euroPerCredit'
+    formula: PartagoBundleFormula
   },
   'Partago klein abonnement': {
     variables: {
@@ -27,7 +43,7 @@ const settings = {
       euroPerCredit: 95.0 / 1800,
     },
     // TODO: time correctie is dagelijks...
-    formula: '(start + distance * kwPerKm * creditsPerKw + ((duration > 18 * 60) ? 18 * 60 : duration)) * euroPerCredit'
+    formula: PartagoAbonnementFormula
   },
   'Partago groot abonnement': {
     variables: {
@@ -37,7 +53,7 @@ const settings = {
       euroPerCredit: 150.0 / 3000,
     },
     // TODO: time correctie is dagelijks...
-    formula: '(start + distance * kwPerKm * creditsPerKw + ((duration > 18 * 60) ? 18 * 60 : duration)) * euroPerCredit'
+    formula: PartagoAbonnementFormula
   },
   'Partago coop': {
     variables: {
@@ -61,7 +77,7 @@ const settings = {
       more: 0.23, // prijs per distance vanaf 100km
       costPerHour: 1.75
     },
-    formula: '(costPerHour * ((duration - duration % 60) / 60 + 1)) + (distance <= 100 ? to100 * distance : (to100 * 100 + more * (distance - 100)))'
+    formula: CambioFormula
   },
   'Cambio Bonus': {
     variables: {
@@ -69,7 +85,7 @@ const settings = {
       more: 0.23, // prijs per distance vanaf 100km
       costPerHour: 1.75
     },
-    formula: '(costPerHour * ((duration - duration % 60) / 60 + 1)) + (distance <= 100 ? to100 * distance : (to100 * 100 + more * (distance - 100)))'
+    formula: CambioFormula
   },
   'Cambio Comfort': {
     variables: {
@@ -77,7 +93,7 @@ const settings = {
       more: 0.18, // prijs per distance vanaf 100km
       costPerHour: 1.55
     },
-    formula: '(costPerHour * ((duration - duration % 60) / 60 + 1)) + (distance <= 100 ? to100 * distance : (to100 * 100 + more * (distance - 100)))'
+    formula: CambioFormula
   },
   BattFan: {
     variables: {
@@ -90,34 +106,37 @@ const settings = {
       price: 25,
       timeMin: 75
     },
-    formula: 'duration * price / timeMin'
+    formula: GreenMobilityPrepaidFormula
   },
   'GreenMobility prepaid 50 euro': {
     variables: {
       price: 50,
       timeMin: 175
     },
-    formula: 'duration * price / timeMin'
+    formula: GreenMobilityPrepaidFormula
   },
   'GreenMobility prepaid 150 euro': {
     variables: {
       price: 150,
       timeMin: 600
     },
-    formula: 'duration * price / timeMin'
+    formula: GreenMobilityPrepaidFormula
   },
   'GreenMobility 3 uur pakket': {
     variables: {
-      overDistancePerKm: 0.25,
-      overTimeCost: 0.25,
+      ...GreenMobilityExcessionCost,
       price: 35,
       maxTime: 3 * 60,
       maxDistance: 100
     },
-    formula: '(distance > maxDistance ? (distance - maxDistance) * overDistancePerKm: 0 ) + \
-              (duration > maxTime ? (duration - maxTime) * overTimeCost : 0) + \
-              price'
+    formula: GreenMobilityPakketFormula
   },
+  'GreenMobility 5 uur pakket': { variables: { ...GreenMobilityExcessionCost, price: 45, maxTime: 5 * 60, maxDistance: 150 }, formula: GreenMobilityPakketFormula },
+  'GreenMobility 10 uur pakket': { variables: { ...GreenMobilityExcessionCost, price: 60, maxTime: 10 * 60, maxDistance: 150} , formula: GreenMobilityPakketFormula },
+  'GreenMobility 1 dag pakket': { variables: { ...GreenMobilityExcessionCost, price: 75, maxTime: 1 * 24 * 60, maxDistance: 200} , formula: GreenMobilityPakketFormula },
+  'GreenMobility 2 dagen pakket': { variables: { ...GreenMobilityExcessionCost, price: 125, maxTime: 2 * 24 * 60, maxDistance: 400 }, formula: GreenMobilityPakketFormula },
+  'GreenMobility 3 dagen pakket': { variables: { ...GreenMobilityExcessionCost, price: 175, maxTime: 3 * 24 * 60, maxDistance: 600 }, formula: GreenMobilityPakketFormula },
+  'GreenMobility 7 dagen pakket': { variables: { ...GreenMobilityExcessionCost, price: 350, maxTime: 7 * 24 * 60 , maxDistance: 1000 }, formula: GreenMobilityPakketFormula },
 }
 
 function calculate ({ name, distance, duration }) {

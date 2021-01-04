@@ -35,7 +35,7 @@ describe('Model', () => {
     })
   })
   describe('Green Mobility', () =>
-    describe('3 dagen pakket', () => {
+    describe('3 uur pakket', () => {
       const name = 'GreenMobility 3 uur pakket'
       it('can be fixed price', () =>
         expect(calculate({ name, distance: 0, duration: 0 })).toEqual(35))
