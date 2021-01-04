@@ -34,4 +34,14 @@ describe('Model', () => {
       })
     })
   })
+  describe('Green Mobility', () =>
+    describe('3 dagen pakket', () => {
+      const name = 'GreenMobility 3 uur pakket'
+      it('can be fixed price', () =>
+        expect(calculate({ name, distance: 0, duration: 0 })).toEqual(35))
+      it('considers overtime', () =>
+        expect(calculate({ name, distance: 0, duration: 181})).toEqual(35.25)) 
+      it('considers exceeding distance', () =>
+        expect(calculate({ name, distance: 101, duration: 0})).toEqual(35.25))
+    }))
 })

@@ -106,15 +106,18 @@ const settings = {
     },
     formula: 'duration * price / timeMin'
   },
-  // 'GreenMobility 3 uur pakket': {
-  //   variables: {
-  //     overDistancePerKm: 0.25,
-  //     price: 35,
-  //     time: 3 * 60,
-  //     maxDistance: 100
-  //   },
-  //   formula: 'duration * price / timeMin'
-  // },
+  'GreenMobility 3 uur pakket': {
+    variables: {
+      overDistancePerKm: 0.25,
+      overTimeCost: 0.25,
+      price: 35,
+      maxTime: 3 * 60,
+      maxDistance: 100
+    },
+    formula: '(distance > maxDistance ? (distance - maxDistance) * overDistancePerKm: 0 ) + \
+              (duration > maxTime ? (duration - maxTime) * overTimeCost : 0) + \
+              price'
+  },
 }
 
 function calculate ({ name, distance, duration }) {
