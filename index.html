@@ -28,7 +28,7 @@
       const distance = parseInt(document.getElementById('distance').value)
       const duration = parseInt(document.getElementById('duration').value)
       showResultBox(distance, duration)
-      // showFixedDistanceGraph(distance)
+      showFixedDistanceGraph(distance)
       showFixedTimeGraph(distance, duration)
       return false
     }
@@ -47,19 +47,40 @@
       Highcharts.chart(id, {
         title: { text: titleText, useHTML: true },
         yAxis: { title: { text: 'Kost' } },
-        legend: {
-          useHTML: true,
-          layout: 'vertical',
-          align: 'right',
-          verticalAlign: 'middle'
-        },
+        legend: { useHTML: true, layout: 'vertical', align: 'right', verticalAlign: 'middle' },
+        plotOptions: { series: { label: { connectorAllowed: false }, pointStart: 0 } },
+        series,
+        responsive: {
+          rules: [{
+            condition: { maxWidth: 500 },
+            chartOptions: {
+              legend: { layout: 'horizontal', align: 'center', verticalAlign: 'bottom'}
+            }
+          }]
+        }
+      });
+    }
+
+    function showFixedDistanceGraph (distance) {
+      const series = []
+      const now = new Date()
+      now.setHours(7)
+      now.setMinutes(0)
+      now.setSeconds(0)
+      now.setMilliseconds(0)
+      Object.entries(settings).forEach(([name], i, array) => {
+        const data = []
+        const color = d3.interpolateRainbow(i/array.length) 
+        for (let duration = 0; duration < 24 * 60 ; duration += 5) data.push([now.valueOf() + duration * 60 * 1000, calculateRounded({ name, distance, duration })])
+        series.push({ name, data, color })
+      })
+      Highcharts.chart('fixedDistanceGraph', {
+        title: { text: `Kost per tijd voor ${distance}&thinsp;km`, useHTML: true },
+        yAxis: { title: { text: 'Kost' } },
+        xAxis: { type: 'datetime' }, 
+        legend: { useHTML: true, layout: 'vertical', align: 'right', verticalAlign: 'middle' },
         plotOptions: {
-          series: {
-            label: {
-              connectorAllowed: false
-            },
-            pointStart: 0
-          }
+          series: { label: { connectorAllowed: false }, pointStart: 0 }
         },
         series,
         responsive: {
@@ -76,18 +97,7 @@
             }
           }]
         }
-      });
-    }
-
-    function showFixedDistanceGraph (distance) {
-      const series = []
-      Object.entries(settings).forEach(([name], i, array) => {
-        const data = []
-        const color = d3.interpolateRainbow(i/array.length) 
-        for (let duration = 0; duration < 24 * 60 ; duration += 5) data.push(calculateRounded({ name, distance, duration }))
-        series.push({ name, data, color })
       })
-      showGraph(series, 'fixedDistanceGraph', `Kost per tijd voor ${distance}&thinsp;km`)
     }
 
     function showFixedTimeGraph (distance, duration) {
