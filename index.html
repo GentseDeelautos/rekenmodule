@@ -71,7 +71,16 @@
       Object.entries(settings).forEach(([name], i, array) => {
         const data = []
         const color = d3.interpolateRainbow(i/array.length) 
-        for (let duration = 0; duration < 24 * 60 ; duration += 5) data.push([now.valueOf() + duration * 60 * 1000, calculateRounded({ name, distance, duration })])
+        if (settings[name].getKeyValues) {
+          const extendedSeries = settings[name].getKeyValues({ 
+            timeRange: [now.valueOf(), now.valueOf() + 24 * 60 * 60 * 1000 ],
+            distanceRange: distance,
+            variables: settings[name].variables 
+          })
+          data.push(...extendedSeries.map(([time, _, cost]) => ([time, cost])))
+        } else {
+          for (let duration = 0; duration < 24 * 60 ; duration += 5) data.push([now.valueOf() + duration * 60 * 1000, calculateRounded({ name, distance, duration })])
+        }
         series.push({ name, data, color })
       })
       Highcharts.chart('fixedDistanceGraph', {

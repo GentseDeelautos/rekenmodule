@@ -60,7 +60,14 @@ const settings = {
       kwPerKm: 15.0 / 100, // TODO: afhankelijk van rijprofiel
       euroPerKw: 1.4
     },
-    // TODO: time correctie is dagelijks...
+    getKeyValues: ({ timeRange, distanceRange, variables }) => {
+      const { kwPerKm, euroPerKw } = variables
+      return [].concat(timeRange).reduce((acc, time) => (
+        [...acc, ...[].concat(distanceRange).reduce((acc2, dist) => (
+          [...acc2, [time, dist, Math.round(100 * dist * kwPerKm * euroPerKw) / 100]]
+        ), [])]
+      ), [])
+    },
     formula: 'distance * kwPerKm * euroPerKw'
   },
   'D&eacute;gage': {
