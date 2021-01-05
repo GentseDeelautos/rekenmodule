@@ -146,7 +146,9 @@ const settings = {
 }
 
 function calculate ({ name, distance, duration }) {
-  const { formula, variables } = settings[name] || {}
+  const { formula, variables, getKeyValues } = settings[name] || {}
+  if (getKeyValues) 
+    return getKeyValues({ timeRange: new Date, distanceRange: distance, variables})[0][2]
   return math.evaluate(formula, { ...variables, distance, duration })
 }
 
