@@ -67,8 +67,7 @@ const settings = {
           [...acc2, [time, dist, Math.round(100 * dist * kwPerKm * euroPerKw) / 100]]
         ), [])]
       ), [])
-    },
-    formula: 'distance * kwPerKm * euroPerKw'
+    }
   },
   'D&eacute;gage': {
     variables: {
