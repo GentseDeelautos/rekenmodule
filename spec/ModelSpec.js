@@ -44,7 +44,7 @@ describe('Model', () => {
           .toEqual(startupFee + (18 * 60 + 1) * creditsPerMinute * pricePerCredit))
     })
   })
-  describe('Green Mobility', () =>
+  xdescribe('Green Mobility', () =>
     describe('3 uur pakket', () => {
       const name = 'GreenMobility 3 uur pakket'
 

@@ -161,7 +161,7 @@ const settings = {
 function calculate ({ name, distance, duration }) {
   const { formula, variables, getKeyValues } = settings[name] || {}
   if (getKeyValues) 
-    return getKeyValues({ startTime: Date.now(), timeRange: 0, distanceRange: distance, variables})[0][2]
+    return getKeyValues({ startTime: Date.now(), timeRange: duration * 60 * 1000, distanceRange: distance, variables})[0][2]
   return math.evaluate(formula, { ...variables, distance, duration })
 }
 

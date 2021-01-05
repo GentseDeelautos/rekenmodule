@@ -85,7 +85,7 @@ describe('Formulas', () => {
       })
     })
   })
-  describe('GreenMobility', () => {
+  xdescribe('GreenMobility', () => {
     beforeAll(async () => {
       const response = await fetch('https://www.greenmobility.com/be/nl/prijzen/')
       this.frag = document.createRange().createContextualFragment(await response.text())
