@@ -60,7 +60,7 @@ const settings = {
       kwPerKm: 15.0 / 100, // TODO: afhankelijk van rijprofiel
       euroPerKw: 1.4
     },
-    getKeyValues: ({ timeRange, distanceRange, variables }) => {
+    getKeyValues: ({ startTime, timeRange, distanceRange, variables }) => {
       const { kwPerKm, euroPerKw } = variables
       return [].concat(timeRange).reduce((acc, time) => (
         [...acc, ...[].concat(distanceRange).reduce((acc2, dist) => (
