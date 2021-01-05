@@ -10,19 +10,33 @@ describe('Model', () => {
     describe('grote bundel', () => {
       const pricePerCredit = 300 / 4800 
       const startupFee = pricePerCredit * startupCredits
+      const { getKeyValues, variables } = settings[params.name]
+      const startTime = new Date('2021-01-01T00:00:00.00').valueOf()
 
-      it('has a startup fee', () =>
-        expect(calculate(params)).toEqual(startupFee))
+      it('has a startup fee', () => 
+        expect(getKeyValues({ startTime, timeRange: 0, distanceRange: 0, variables }))
+          .toEqual([[startTime, 0, startupFee]]))
 
       it('has a price per distance', () =>
-        expect(calculate({ ...params, distance: 100 }))
-          .toEqual(startupFee + 100 * creditsPerKm * pricePerCredit))
+        expect(getKeyValues({ startTime, timeRange: 0, distanceRange: 100, variables }))
+          .toEqual([[startTime, 100, startupFee + 100 * creditsPerKm * pricePerCredit]]))
 
       it('has a price per minute', () =>
-        expect(calculate({ ...params, duration: 18 * 60 }))
-          .toEqual(startupFee + (18 * 60) * creditsPerMinute * pricePerCredit))
+        expect(getKeyValues({ startTime, timeRange: 60 * 1000, distanceRange: 0, variables }))
+          .toEqual([[startTime + 60 * 1000, 0, startupFee + creditsPerMinute * pricePerCredit]]))
 
-      it('has free time per day', () =>
+      it('can calculate ranges' , () => 
+        expect(getKeyValues({ startTime, timeRange: [0, 60 * 1000], distanceRange: [0, 100], variables }))
+          .toEqual([
+            [startTime, 0, startupFee],
+            [startTime, 100, startupFee + 100 * creditsPerKm * pricePerCredit],
+            [startTime + 60 * 1000, 0, startupFee + creditsPerMinute * pricePerCredit],
+            [startTime + 60 * 1000, 100, startupFee + (100 * creditsPerKm + creditsPerMinute) * pricePerCredit]
+          ]))
+          
+      // TODO: can't find a trace of the free time on the website anymore;
+      // created https://www.loomio.org/d/RCqKmtpN/nachttarief for it  
+      xit('has free time per day', () =>
         expect(calculate({ ...params, duration: 18 * 60 + 1 }))
           .toEqual(startupFee + (18 * 60) * creditsPerMinute * pricePerCredit))
       xit('has limited free time per day', () =>
@@ -39,7 +53,7 @@ describe('Model', () => {
 
       it('considers overtime', () =>
         expect(calculate({ name, distance: 0, duration: 181})).toEqual(35.25)) 
-        
+
       it('considers exceeding distance', () =>
         expect(calculate({ name, distance: 101, duration: 0})).toEqual(35.25))
     }))
