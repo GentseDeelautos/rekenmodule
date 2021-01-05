@@ -68,14 +68,15 @@
       now.setMinutes(0)
       now.setSeconds(0)
       now.setMilliseconds(0)
-      Object.entries(settings).forEach(([name], i, array) => {
+      Object.entries(settings).forEach(([name, { getKeyValues, variables }], i, array) => {
         const data = []
         const color = d3.interpolateRainbow(i/array.length) 
-        if (settings[name].getKeyValues) {
-          const extendedSeries = settings[name].getKeyValues({ 
-            timeRange: [now.valueOf(), now.valueOf() + 24 * 60 * 60 * 1000 ],
+        if (getKeyValues) {
+          const extendedSeries = getKeyValues({ 
+            startTime: now.valueOf(),
+            timeRange: [0, 24 * 60 * 60 * 1000 ],
             distanceRange: distance,
-            variables: settings[name].variables 
+            variables
           })
           data.push(...extendedSeries.map(([time, _, cost]) => ([time, cost])))
         } else {

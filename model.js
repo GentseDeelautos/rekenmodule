@@ -64,7 +64,7 @@ const settings = {
       const { kwPerKm, euroPerKw } = variables
       return [].concat(timeRange).reduce((acc, time) => (
         [...acc, ...[].concat(distanceRange).reduce((acc2, dist) => (
-          [...acc2, [time, dist, Math.round(100 * dist * kwPerKm * euroPerKw) / 100]]
+          [...acc2, [time + startTime, dist, Math.round(100 * dist * kwPerKm * euroPerKw) / 100]]
         ), [])]
       ), [])
     }
@@ -148,7 +148,7 @@ const settings = {
 function calculate ({ name, distance, duration }) {
   const { formula, variables, getKeyValues } = settings[name] || {}
   if (getKeyValues) 
-    return getKeyValues({ timeRange: new Date, distanceRange: distance, variables})[0][2]
+    return getKeyValues({ startTime: Date.now(), timeRange: 0, distanceRange: distance, variables})[0][2]
   return math.evaluate(formula, { ...variables, distance, duration })
 }
 
