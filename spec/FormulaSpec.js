@@ -79,7 +79,7 @@ describe('Formulas', () => {
       const variables = settings['Partago coop'].variables
       it('still has price of 01/01/2021', () => {
         const text = this.frag.textContent
-          .split('Wil je geen tijdstress?')[1]
+          .split('Bye bye tijdstress?')[1]
           .split('Elke maand betaal je de gemaakte ritten met domiciliëring')[0]
         expect(text).toContain(`${variables.euroPerKw.toLocaleString('nl-BE')}0 euro per kWh.`)
       })
