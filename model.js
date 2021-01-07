@@ -43,6 +43,7 @@ const settings = {
   },
   'Partago kleine bundel': {
     variables: {
+      freeTimeRange: ['0:00', '6:00'],
       start: 30,
       kwPerKm: 15.0 / 100, // TODO: afhankelijk van rijprofiel
       creditsPerKw: 15,

@@ -18,7 +18,8 @@ describe('Formulas', () => {
     beforeAll(async () => {
       const response = await fetch('https://www.partago.be/tarieven.html')
       this.frag = document.createRange().createContextualFragment(await response.text())
-      const [_, ritPrijzen] = this.frag.split('Ritprijs')
+      const [_, ...ritPrijzen] = this.frag.textContent.split('Ritprijs')
+      Object.assign(this, { ritPrijzen })
     })
     describe('abonnement en bundel', () => {
       beforeAll(() => {
@@ -40,6 +41,8 @@ describe('Formulas', () => {
       })
       describe('kleine bundel', () => {
         const variables = settings['Partago kleine bundel'].variables
+        const { freeTimeRange } = variables
+        const planIndex = 0
         it('matches opstartcredits', () =>
           expect(this.text).toContain(` ${variables.start} credits bij reserveren`))
         it('matches credits per kW', () =>
@@ -50,6 +53,8 @@ describe('Formulas', () => {
           await expectImageToMatch('#partagoKleineBundel', url)
           const refImg = document.querySelector('#partagoKleineBundel')
         })
+        it('still has the same free time range as of 01/01/2021', () =>
+          expect(this.ritPrijzen[planIndex]).toContain(`gratis tussen ${freeTimeRange[0]} en ${freeTimeRange[1]}`))
       })
       describe('klein abonnement', () => {
         const variables = settings['Partago klein abonnement'].variables
@@ -78,12 +83,6 @@ describe('Formulas', () => {
     })
     describe('coop formule', () => {
       const variables = settings['Partago coop'].variables
-      xit('xxx', () => {
-        const text = this.frag.textContent
-          .split('beginners')[1]
-          // .split('genieters')[0]
-        expect(text).toBe(1)
-      })
       it('still has price of 01/01/2021', () => {
         const text = this.frag.textContent
           .split('Bye bye tijdstress?')[1]
