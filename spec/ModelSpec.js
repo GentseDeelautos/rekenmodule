@@ -14,19 +14,19 @@ describe('Model', () => {
       const startTime = new Date('2021-01-01T00:00:00.00').valueOf()
 
       it('has a startup fee', () => 
-        expect(getKeyValues({ startTime, timeRange: 0, distanceRange: 0, variables }))
+        expect(getKeyValues({ startTime, timeRange: 0, distanceRange: 0, variables: { ...variables, kWhPerKm } }))
           .toEqual([[startTime, 0, startupFee]]))
 
       it('has a price per distance', () =>
-        expect(getKeyValues({ startTime, timeRange: 0, distanceRange: 100, variables }))
+        expect(getKeyValues({ startTime, timeRange: 0, distanceRange: 100, variables: { ...variables, kWhPerKm } }))
           .toEqual([[startTime, 100, startupFee + 100 * creditsPerKm * pricePerCredit]]))
 
       it('has a price per minute', () =>
-        expect(getKeyValues({ startTime, timeRange: 60 * 1000, distanceRange: 0, variables }))
+        expect(getKeyValues({ startTime, timeRange: 60 * 1000, distanceRange: 0, variables: { ...variables, kWhPerKm } }))
           .toEqual([[startTime + 60 * 1000, 0, startupFee + creditsPerMinute * pricePerCredit]]))
 
       it('can calculate ranges' , () => 
-        expect(getKeyValues({ startTime, timeRange: [0, 60 * 1000], distanceRange: [0, 100], variables }))
+        expect(getKeyValues({ startTime, timeRange: [0, 60 * 1000], distanceRange: [0, 100], variables: { ...variables, kWhPerKm } }))
           .toEqual([
             [startTime, 0, startupFee],
             [startTime, 100, startupFee + 100 * creditsPerKm * pricePerCredit],
