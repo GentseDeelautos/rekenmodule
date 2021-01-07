@@ -18,6 +18,7 @@ describe('Formulas', () => {
     beforeAll(async () => {
       const response = await fetch('https://www.partago.be/tarieven.html')
       this.frag = document.createRange().createContextualFragment(await response.text())
+      const [_, ritPrijzen] = this.frag.split('Ritprijs')
     })
     describe('abonnement en bundel', () => {
       beforeAll(() => {
@@ -77,6 +78,12 @@ describe('Formulas', () => {
     })
     describe('coop formule', () => {
       const variables = settings['Partago coop'].variables
+      it('xxx', () => {
+        const text = this.frag.textContent
+          .split('beginners')[1]
+          // .split('genieters')[0]
+        expect(text).toBe(1)
+      })
       it('still has price of 01/01/2021', () => {
         const text = this.frag.textContent
           .split('Bye bye tijdstress?')[1]
