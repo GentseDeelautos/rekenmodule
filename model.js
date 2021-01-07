@@ -1,5 +1,12 @@
+const kwPerKm = 15.0 / 100 // TODO: afhankelijk van rijprofiel
 const Partago = {
   nonCoop: {
+    variables: {
+      freeTimeRange: ['0:00', '6:00'],
+      start: 30,
+      kwPerKm,
+      creditsPerKw: 15
+    },
     getKeyValues: ({ startTime, timeRange, distanceRange, variables }) => {
       const { start, euroPerCredit, kwPerKm, creditsPerKw } = variables
       return [].concat(timeRange).reduce((acc, time) => [
@@ -34,44 +41,35 @@ const GreenMobilityExcessionCost = {
 const settings = {
   'Partago grote bundel': {
     variables: {
-      start: 30,
-      kwPerKm: 15.0 / 100, // TODO: afhankelijk van rijprofiel
-      creditsPerKw: 15,
+      ...Partago.nonCoop.variables,
       euroPerCredit: 300.0 / 4800,
     },
     getKeyValues: Partago.nonCoop.getKeyValues
   },
   'Partago kleine bundel': {
     variables: {
-      freeTimeRange: ['0:00', '6:00'],
-      start: 30,
-      kwPerKm: 15.0 / 100, // TODO: afhankelijk van rijprofiel
-      creditsPerKw: 15,
+      ...Partago.nonCoop.variables,
       euroPerCredit: 75.0 / 1000,
     },
     getKeyValues: Partago.nonCoop.getKeyValues
   },
   'Partago klein abonnement': {
     variables: {
-      start: 30,
-      kwPerKm: 15.0 / 100, // TODO: afhankelijk van rijprofiel
-      creditsPerKw: 15,
+      ...Partago.nonCoop.variables,
       euroPerCredit: 95.0 / 1800,
     },
     getKeyValues: Partago.nonCoop.getKeyValues
   },
   'Partago groot abonnement': {
     variables: {
-      start: 30,
-      kwPerKm: 15.0 / 100, // TODO: afhankelijk van rijprofiel
-      creditsPerKw: 15,
+      ...Partago.nonCoop.variables,
       euroPerCredit: 150.0 / 3000,
     },
     getKeyValues: Partago.nonCoop.getKeyValues
   },
   'Partago coop': {
     variables: {
-      kwPerKm: 15.0 / 100, // TODO: afhankelijk van rijprofiel
+      kwPerKm,
       euroPerKw: 1.4
     },
     getKeyValues: ({ startTime, timeRange, distanceRange, variables }) => {

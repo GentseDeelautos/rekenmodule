@@ -27,18 +27,6 @@ describe('Formulas', () => {
           .split('Stap 2 Koop jouw bundel of activeer een abonnement')[1]
           .split('Stap 3 Om het leven gemakkelijker te maken')[0]
       })
-      describe('grote bundel', () => {
-        const variables = settings['Partago grote bundel'].variables
-        it('matches opstartcredits', () =>
-          expect(this.text).toContain(` ${variables.start} credits bij reserveren`))
-        it('matches credits per kW', () =>
-          expect(this.text).toContain(` ${variables.creditsPerKw} credits per verbruikte kWh`))
-        it('still has price as of 01/01/2010', async () => {
-          const url = '/uploads/7/3/7/4/73741293/gb-simpel_2_orig.png'
-          expectImageToBeLoaded(this.frag, url)
-          await expectImageToMatch('#partagoGroteBundel', url)
-        })
-      })
       describe('kleine bundel', () => {
         const variables = settings['Partago kleine bundel'].variables
         const { freeTimeRange } = variables
@@ -56,8 +44,26 @@ describe('Formulas', () => {
         it('still has the same free time range as of 01/01/2021', () =>
           expect(this.ritPrijzen[planIndex]).toContain(`gratis tussen ${freeTimeRange[0]} en ${freeTimeRange[1]}`))
       })
+      describe('grote bundel', () => {
+        const variables = settings['Partago grote bundel'].variables
+        const { freeTimeRange } = variables
+        const planIndex = 1
+        it('matches opstartcredits', () =>
+          expect(this.text).toContain(` ${variables.start} credits bij reserveren`))
+        it('matches credits per kW', () =>
+          expect(this.text).toContain(` ${variables.creditsPerKw} credits per verbruikte kWh`))
+        it('still has price as of 01/01/2010', async () => {
+          const url = '/uploads/7/3/7/4/73741293/gb-simpel_2_orig.png'
+          expectImageToBeLoaded(this.frag, url)
+          await expectImageToMatch('#partagoGroteBundel', url)
+        })
+        it('still has the same free time range as of 01/01/2021', () =>
+          expect(this.ritPrijzen[planIndex]).toContain(`gratis tussen ${freeTimeRange[0]} en ${freeTimeRange[1]}`))
+      })
       describe('klein abonnement', () => {
         const variables = settings['Partago klein abonnement'].variables
+        const { freeTimeRange } = variables
+        const planIndex = 2
         it('matches opstartcredits', () =>
           expect(this.text).toContain(` ${variables.start} credits bij reserveren`))
         it('matches credits per kW', () =>
@@ -67,9 +73,13 @@ describe('Formulas', () => {
           expectImageToBeLoaded(frag, url)
           await expectImageToMatch('#partagoKleinAbonnement', url)
         })
+        it('still has the same free time range as of 01/01/2021', () =>
+        expect(this.ritPrijzen[planIndex]).toContain(`gratis tussen ${freeTimeRange[0]} en ${freeTimeRange[1]}`))
       })
       describe('groot abonnement', () => {
         const variables = settings['Partago groot abonnement'].variables
+        const { freeTimeRange } = variables
+        const planIndex = 3
         it('matches opstartcredits', () =>
           expect(this.text).toContain(` ${variables.start} credits bij reserveren`))
         it('matches credits per kW', () =>
@@ -79,10 +89,13 @@ describe('Formulas', () => {
           expectImageToBeLoaded(frag, url)
           await expectImageToMatch('#partagoGrootAbonnement', url)
         })
+        it('still has the same free time range as of 01/01/2021', () =>
+        expect(this.ritPrijzen[planIndex]).toContain(`gratis tussen ${freeTimeRange[0]} en ${freeTimeRange[1]}`))
       })
     })
     describe('coop formule', () => {
       const variables = settings['Partago coop'].variables
+      const planIndex = 4
       it('still has price of 01/01/2021', () => {
         const text = this.frag.textContent
           .split('Bye bye tijdstress?')[1]
