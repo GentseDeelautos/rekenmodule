@@ -28,17 +28,22 @@
       const distance = parseInt(document.getElementById('distance').value)
       const duration = parseInt(document.getElementById('duration').value)
       const kWhPerKm = parseInt(document.getElementById('kWhPer100Km').value)/100
-      showResultBox(distance, duration, kWhPerKm)
-      // showFixedDistanceGraph(distance, kWhPerKm)
-      // showFixedTimeGraph(distance, duration, kWhPerKm)
+      const startTimeMinutes = parseInt(document.getElementById('startTimeMinutes').value)
+      const startTimeHours = parseInt(document.getElementById('startTimeHours').value)
+      const startTime = (startTimeHours * 60 + startTimeMinutes) * 60 * 1000
+      showResultBox(distance, duration, kWhPerKm, startTime)
+      // showFixedDistanceGraph(distance, kWhPerKm, startTime)
+      // showFixedTimeGraph(distance, duration, kWhPerKm, startTime)
       return false
     }
 
-    function showResultBox (distance, duration, kWhPerKm) {
+    function showResultBox (distance, duration, kWhPerKm, startTime) {
       const lines = []
+      // TODO: push up cookie logic
       document.cookie=`distance=${distance}`
       document.cookie=`duration=${duration}`
       document.cookie=`kWhPer100Km=${kWhPerKm *  100}`
+      document.cookie=`startTime=${startTime}`
       for (name in settings) {
         lines.push(`<strong>${ name }:</strong>&nbsp;${calculateRounded({ name, distance, duration, kWhPerKm })}&euro;`)
       }
@@ -127,22 +132,31 @@
     window.onload = () => {
       if (0 <= document.cookie.indexOf('dontShowIntro=true'))
       document.getElementById('modal-control').removeAttribute('checked')
-      const [_, distance] = document.cookie.match(/distance=(\d*)/) || []
-      const [__, duration] = document.cookie.match(/duration=(\d*)/) || [] 
-      const [___, kWhPer100Km] = document.cookie.match(/kWhPer100Km=(\d*)/) || [] 
+      const distance = (document.cookie.match(/distance=(\d*)/) || [])[1]
+      const duration = (document.cookie.match(/duration=(\d*)/) || [])[1]
+      const kWhPer100Km = (document.cookie.match(/kWhPer100Km=(\d*)/) || [])[1] 
+      const startTime = (document.cookie.match(/startTime=(\d*)/) || [])[1] 
       if (distance) document.getElementById('distance').value = distance
       if (duration) document.getElementById('duration').value = duration
       if (kWhPer100Km) document.getElementById('kWhPer100Km').value = kWhPer100Km
+      if (startTime) {
+        const hourInMs = 60 * 60 * 1000
+        const totalMinutes = startTime / (60 * 1000)
+        const minutes = totalMinutes % 60
+        const hours = (totalMinutes - minutes) / 60 
+        document.getElementById('startTimeMinutes').value = minutes
+        document.getElementById('startTimeHours').value = hours
+      }
     }
   </script>
   <style>
     form { display: flex; flex-direction: column; }
     form > span { display: flex; flex-direction: row; align-items: baseline; }
     .buttons { flex-grow: 1; display: flex; justify-content: flex-end; }
-    #startTijdUur,#startTijdMinuten, #kWhPerKm { width: 4em; }
+    #startTimeHours,#startTimeMinutes, #kWhPerKm { width: 4em; }
     #distance, #duration { width: 5em; }
     @media screen and (min-width: 77rem) {
-      #startTijdMinuten::after,
+      #startTimeMinutes::after,
       #distance + label::after,
       #duration + label::after { content: "," }
       form { flex-direction: row; align-items: baseline; }
@@ -169,10 +183,10 @@
   </div>
   <form>
     <span>
-      <label for="startTijdUur">starttijd</label>
-      <input type="number" id="startTijdUur" value="6" inputmode="decimal" pattern="[0-9]*" novalidate readonly>
+      <label for="startTimeHours">starttijd</label>
+      <input type="number" id="startTimeHours" value="6" inputmode="decimal" pattern="[0-9]*" novalidate readonly>
       :
-      <input type="number" id="startTijdMinuten" value="00" inputmode="decimal" pattern="[0-9]*" novalidate readonly>
+      <input type="number" id="startTimeMinutes" value="00" inputmode="decimal" pattern="[0-9]*" novalidate readonly>
     </span> 
     <span>  
       <label for="distance">afstand</label>
