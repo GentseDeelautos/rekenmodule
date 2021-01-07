@@ -2,11 +2,11 @@ const Partago = {
   nonCoop: {
     variables: {
       freeTimeRange: ['0:00', '6:00'],
-      start: 30,
+      startCostCredits: 30,
       creditsPerKwh: 15
     },
     getKeyValues: ({ startTime, timeRange, distanceRange, variables }) => {
-      const { start, euroPerCredit, kWhPerKm, creditsPerKwh } = variables
+      const { startCostCredits, euroPerCredit, kWhPerKm, creditsPerKwh } = variables
       return [].concat(timeRange).reduce((acc, time) => [
         ...acc, 
         ...[].concat(distanceRange).reduce((acc, dist) => [
@@ -14,7 +14,7 @@ const Partago = {
           [
             time + startTime, 
             dist, 
-            (start + dist * kWhPerKm * creditsPerKwh + time / 60 / 1000) * euroPerCredit
+            (startCostCredits + dist * kWhPerKm * creditsPerKwh + time / 60 / 1000) * euroPerCredit
           ]
         ],  [])
       ], [])
