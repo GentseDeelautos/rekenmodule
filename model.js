@@ -1,14 +1,14 @@
-const kwPerKm = 15.0 / 100 // TODO: afhankelijk van rijprofiel
+const kwhPerKm = 15.0 / 100 // TODO: afhankelijk van rijprofiel
 const Partago = {
   nonCoop: {
     variables: {
       freeTimeRange: ['0:00', '6:00'],
       start: 30,
-      kwPerKm,
-      creditsPerKw: 15
+      kwhPerKm,
+      creditsPerKwh: 15
     },
     getKeyValues: ({ startTime, timeRange, distanceRange, variables }) => {
-      const { start, euroPerCredit, kwPerKm, creditsPerKw } = variables
+      const { start, euroPerCredit, kwhPerKm, creditsPerKwh } = variables
       return [].concat(timeRange).reduce((acc, time) => [
         ...acc, 
         ...[].concat(distanceRange).reduce((acc, dist) => [
@@ -16,7 +16,7 @@ const Partago = {
           [
             time + startTime, 
             dist, 
-            (start + dist * kwPerKm * creditsPerKw + time / 60 / 1000) * euroPerCredit
+            (start + dist * kwhPerKm * creditsPerKwh + time / 60 / 1000) * euroPerCredit
           ]
         ],  [])
       ], [])
@@ -69,14 +69,14 @@ const settings = {
   },
   'Partago coop': {
     variables: {
-      kwPerKm,
+      kwhPerKm,
       euroPerKw: 1.4
     },
     getKeyValues: ({ startTime, timeRange, distanceRange, variables }) => {
-      const { kwPerKm, euroPerKw } = variables
+      const { kwhPerKm, euroPerKw } = variables
       return [].concat(timeRange).reduce((acc, time) => (
         [...acc, ...[].concat(distanceRange).reduce((acc2, dist) => (
-          [...acc2, [time + startTime, dist, Math.round(100 * dist * kwPerKm * euroPerKw) / 100]]
+          [...acc2, [time + startTime, dist, Math.round(100 * dist * kwhPerKm * euroPerKw) / 100]]
         ), [])]
       ), [])
     }

@@ -3,8 +3,8 @@ describe('Model', () => {
     const startupCredits = 30
     const kWhPerKm = 15 / 100
     const creditsPerMinute = 1
-    const creditsPerKWh = 15
-    const creditsPerKm = creditsPerKWh * kWhPerKm
+    const creditsPerKwh = 15
+    const creditsPerKm = creditsPerKwh * kWhPerKm
     const params = { name: 'Partago grote bundel', distance: 0, duration: 0 }
 
     describe('grote bundel', () => {
