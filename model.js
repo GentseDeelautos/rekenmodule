@@ -1,14 +1,12 @@
-const kwhPerKm = 15.0 / 100 // TODO: afhankelijk van rijprofiel
 const Partago = {
   nonCoop: {
     variables: {
       freeTimeRange: ['0:00', '6:00'],
       start: 30,
-      kwhPerKm,
       creditsPerKwh: 15
     },
     getKeyValues: ({ startTime, timeRange, distanceRange, variables }) => {
-      const { start, euroPerCredit, kwhPerKm, creditsPerKwh } = variables
+      const { start, euroPerCredit, kWhPerKm, creditsPerKwh } = variables
       return [].concat(timeRange).reduce((acc, time) => [
         ...acc, 
         ...[].concat(distanceRange).reduce((acc, dist) => [
@@ -16,7 +14,7 @@ const Partago = {
           [
             time + startTime, 
             dist, 
-            (start + dist * kwhPerKm * creditsPerKwh + time / 60 / 1000) * euroPerCredit
+            (start + dist * kWhPerKm * creditsPerKwh + time / 60 / 1000) * euroPerCredit
           ]
         ],  [])
       ], [])
@@ -69,14 +67,13 @@ const settings = {
   },
   'Partago coop': {
     variables: {
-      kwhPerKm,
       euroPerKw: 1.4
     },
     getKeyValues: ({ startTime, timeRange, distanceRange, variables }) => {
-      const { kwhPerKm, euroPerKw } = variables
+      const { kWhPerKm, euroPerKw } = variables
       return [].concat(timeRange).reduce((acc, time) => (
         [...acc, ...[].concat(distanceRange).reduce((acc2, dist) => (
-          [...acc2, [time + startTime, dist, Math.round(100 * dist * kwhPerKm * euroPerKw) / 100]]
+          [...acc2, [time + startTime, dist, Math.round(100 * dist * kWhPerKm * euroPerKw) / 100]]
         ), [])]
       ), [])
     }
@@ -157,11 +154,11 @@ const settings = {
   'GreenMobility 7 dagen pakket': { variables: { ...GreenMobilityExcessionCost, price: 350, maxTime: 7 * 24 * 60 , maxDistance: 1000 }, formula: GreenMobilityPakketFormula },
 }
 
-function calculate ({ name, distance, duration }) {
+function calculate ({ name, distance, duration, kWhPerKm }) {
   const { formula, variables, getKeyValues } = settings[name] || {}
   if (getKeyValues) 
-    return getKeyValues({ startTime: Date.now(), timeRange: duration * 60 * 1000, distanceRange: distance, variables})[0][2]
-  return math.evaluate(formula, { ...variables, distance, duration })
+    return getKeyValues({ startTime: Date.now(), timeRange: duration * 60 * 1000, distanceRange: distance, variables: { ...variables, kWhPerKm } })[0][2]
+  return math.evaluate(formula, { ...variables, kWhPerKm, distance, duration })
 }
 
 function calculateRounded (opties) {

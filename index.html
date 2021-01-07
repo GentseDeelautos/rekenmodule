@@ -27,18 +27,20 @@
     function showResult () {
       const distance = parseInt(document.getElementById('distance').value)
       const duration = parseInt(document.getElementById('duration').value)
-      showResultBox(distance, duration)
-      // showFixedDistanceGraph(distance)
-      // showFixedTimeGraph(distance, duration)
+      const kWhPerKm = parseInt(document.getElementById('kWhPer100Km').value)/100
+      showResultBox(distance, duration, kWhPerKm)
+      // showFixedDistanceGraph(distance, kWhPerKm)
+      // showFixedTimeGraph(distance, duration, kWhPerKm)
       return false
     }
 
-    function showResultBox (distance, duration) {
+    function showResultBox (distance, duration, kWhPerKm) {
       const lines = []
       document.cookie=`distance=${distance}`
       document.cookie=`duration=${duration}`
+      document.cookie=`kWhPer100Km=${kWhPerKm *  100}`
       for (name in settings) {
-        lines.push(`<strong>${ name }:</strong>&nbsp;${calculateRounded({ name, distance, duration })}&euro;`)
+        lines.push(`<strong>${ name }:</strong>&nbsp;${calculateRounded({ name, distance, duration, kWhPerKm })}&euro;`)
       }
       document.getElementById('result').innerHTML = lines.join('<br>')
     }
@@ -61,7 +63,7 @@
       });
     }
 
-    function showFixedDistanceGraph (distance) {
+    function showFixedDistanceGraph (distance, kWhPerKm) {
       const series = []
       const now = new Date()
       now.setHours(7)
@@ -76,7 +78,7 @@
             startTime: now.valueOf(),
             timeRange: [0, 24 * 60 * 60 * 1000 ],
             distanceRange: distance,
-            variables
+            variables: { ...variables, kWhPerKm }
           })
           data.push(...extendedSeries.map(([time, _, cost]) => ([time, cost])))
         } else {
@@ -110,13 +112,13 @@
       })
     }
 
-    function showFixedTimeGraph (distance, duration) {
+    function showFixedTimeGraph (distance, duration, kWhPerKm) {
       const series = []
       const maxKm = duration / 60 * 120 // maximum 120 distance/h
       Object.entries(settings).forEach(([name], i, array) => {
         const data = []
         const color = d3.interpolateRainbow(i/array.length) 
-        for (let distance = 0; distance <= maxKm; distance++) data.push(calculateRounded({ name, distance, duration }))
+        for (let distance = 0; distance <= maxKm; distance++) data.push(calculateRounded({ name, distance, duration, kWhPerKm }))
         series.push({ name, data, color })
       })
       showGraph(series, 'fixedTimeGraph', `Kost per afstand voor ${duration}&thinsp;min`)
@@ -127,15 +129,17 @@
       document.getElementById('modal-control').removeAttribute('checked')
       const [_, distance] = document.cookie.match(/distance=(\d*)/) || []
       const [__, duration] = document.cookie.match(/duration=(\d*)/) || [] 
+      const [___, kWhPer100Km] = document.cookie.match(/kWhPer100Km=(\d*)/) || [] 
       if (distance) document.getElementById('distance').value = distance
       if (duration) document.getElementById('duration').value = duration
+      if (kWhPer100Km) document.getElementById('kWhPer100Km').value = kWhPer100Km
     }
   </script>
   <style>
     form { display: flex; flex-direction: column; }
     form > span { display: flex; flex-direction: row; align-items: baseline; }
     .buttons { flex-grow: 1; display: flex; justify-content: flex-end; }
-    #startTijdUur,#startTijdMinuten, #verbruik { width: 4em; }
+    #startTijdUur,#startTijdMinuten, #kWhPerKm { width: 4em; }
     #distance, #duration { width: 5em; }
     @media screen and (min-width: 77rem) {
       #startTijdMinuten::after,
@@ -181,9 +185,9 @@
       <label for="duration">minuten</label>
     </span>
     <span>
-      <label for="verbruik">(verbruik</label>
-      <input type="number" id="verbuik" value="15" inputmode="decimal" pattern="[0-9]*" novalidate readonly>
-      kWh/km)
+      <label for="kWhPer100Km">(verbruik</label>
+      <input type="number" id="kWhPer100Km" value="17" inputmode="decimal" pattern="[0-9]*" novalidate>
+      <label for="kWhPer100Km">kWh/100 km)</label>
     </span>
     <span class="buttons">
       <input type="submit" id="modal-control" onclick="showResult(); return false" value="toon resultaat">
