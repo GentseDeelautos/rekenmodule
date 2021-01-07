@@ -28,13 +28,12 @@ describe('Formulas', () => {
           .split('Stap 3 Om het leven gemakkelijker te maken')[0]
       })
       describe('kleine bundel', () => {
-        const variables = settings['Partago kleine bundel'].variables
-        const { freeTimeRange } = variables
+        const { freeTimeRange, start, creditsPerKw } = settings['Partago kleine bundel'].variables
         const planIndex = 0
         it('matches opstartcredits', () =>
-          expect(this.text).toContain(` ${variables.start} credits bij reserveren`))
+          expect(this.text).toContain(` ${start} credits bij reserveren`))
         it('matches credits per kW', () =>
-          expect(this.text).toContain(` ${variables.creditsPerKw} credits per verbruikte kWh`))
+          expect(this.text).toContain(` ${creditsPerKw} credits per verbruikte kWh`))
         it('still has price as of 01/01/2021', async () => {
           const url = '/uploads/7/3/7/4/73741293/kb-plain-final-100dpi_8_orig.png'
           expectImageToBeLoaded(frag, url)
@@ -45,13 +44,12 @@ describe('Formulas', () => {
           expect(this.ritPrijzen[planIndex]).toContain(`gratis tussen ${freeTimeRange[0]} en ${freeTimeRange[1]}`))
       })
       describe('grote bundel', () => {
-        const variables = settings['Partago grote bundel'].variables
-        const { freeTimeRange } = variables
+        const { freeTimeRange, start, creditsPerKw } = settings['Partago grote bundel'].variables
         const planIndex = 1
         it('matches opstartcredits', () =>
-          expect(this.text).toContain(` ${variables.start} credits bij reserveren`))
+          expect(this.text).toContain(` ${start} credits bij reserveren`))
         it('matches credits per kW', () =>
-          expect(this.text).toContain(` ${variables.creditsPerKw} credits per verbruikte kWh`))
+          expect(this.text).toContain(` ${creditsPerKw} credits per verbruikte kWh`))
         it('still has price as of 01/01/2010', async () => {
           const url = '/uploads/7/3/7/4/73741293/gb-simpel_2_orig.png'
           expectImageToBeLoaded(this.frag, url)
@@ -61,13 +59,12 @@ describe('Formulas', () => {
           expect(this.ritPrijzen[planIndex]).toContain(`gratis tussen ${freeTimeRange[0]} en ${freeTimeRange[1]}`))
       })
       describe('klein abonnement', () => {
-        const variables = settings['Partago klein abonnement'].variables
-        const { freeTimeRange } = variables
+        const { freeTimeRange, start, creditsPerKw } = settings['Partago klein abonnement'].variables
         const planIndex = 2
         it('matches opstartcredits', () =>
-          expect(this.text).toContain(` ${variables.start} credits bij reserveren`))
+          expect(this.text).toContain(` ${start} credits bij reserveren`))
         it('matches credits per kW', () =>
-          expect(this.text).toContain(` ${variables.creditsPerKw} credits per verbruikte kWh`))
+          expect(this.text).toContain(` ${creditsPerKw} credits per verbruikte kWh`))
         it('still has price as of 01/01/2021', async () => {
           const url = '/uploads/7/3/7/4/73741293/ka-simpel_2_orig.png'
           expectImageToBeLoaded(frag, url)
@@ -77,13 +74,12 @@ describe('Formulas', () => {
         expect(this.ritPrijzen[planIndex]).toContain(`gratis tussen ${freeTimeRange[0]} en ${freeTimeRange[1]}`))
       })
       describe('groot abonnement', () => {
-        const variables = settings['Partago groot abonnement'].variables
-        const { freeTimeRange } = variables
+        const { freeTimeRange, start, creditsPerKw } = settings['Partago groot abonnement'].variables
         const planIndex = 3
         it('matches opstartcredits', () =>
-          expect(this.text).toContain(` ${variables.start} credits bij reserveren`))
+          expect(this.text).toContain(` ${start} credits bij reserveren`))
         it('matches credits per kW', () =>
-          expect(this.text).toContain(` ${variables.creditsPerKw} credits per verbruikte kWh`))
+          expect(this.text).toContain(` ${creditsPerKw} credits per verbruikte kWh`))
         it('still has price as of 01/01/2021', async () => {
           const url = '/uploads/7/3/7/4/73741293/ga-simpel_2_orig.png'
           expectImageToBeLoaded(frag, url)
@@ -94,13 +90,13 @@ describe('Formulas', () => {
       })
     })
     describe('coop formule', () => {
-      const variables = settings['Partago coop'].variables
+      const { euroPerKw } = settings['Partago coop'].variables
       const planIndex = 4
       it('still has price of 01/01/2021', () => {
         const text = this.frag.textContent
           .split('Bye bye tijdstress?')[1]
           .split('Elke maand betaal je de gemaakte ritten met domiciliëring')[0]
-        expect(text).toContain(`${variables.euroPerKw.toLocaleString('nl-BE')}0 euro per kWh.`)
+        expect(text).toContain(`${euroPerKw.toLocaleString('nl-BE')}0 euro per kWh.`)
       })
     })
   })
