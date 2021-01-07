@@ -135,9 +135,12 @@
     form { display: flex; flex-direction: column; }
     form > span { display: flex; flex-direction: row; align-items: baseline; }
     .buttons { flex-grow: 1; display: flex; justify-content: flex-end; }
+    #startTijdUur,#startTijdMinuten, #verbruik { width: 4em; }
     #distance, #duration { width: 5em; }
-    @media screen and (min-width: 42rem) {
-      #distance + label::after { content: "," }
+    @media screen and (min-width: 77rem) {
+      #startTijdMinuten::after,
+      #distance + label::after,
+      #duration + label::after { content: "," }
       form { flex-direction: row; align-items: baseline; }
     }
   </style>
@@ -161,6 +164,12 @@
     </div>
   </div>
   <form>
+    <span>
+      <label for="startTijdUur">starttijd</label>
+      <input type="number" id="startTijdUur" value="6" inputmode="decimal" pattern="[0-9]*" novalidate readonly>
+      :
+      <input type="number" id="startTijdMinuten" value="00" inputmode="decimal" pattern="[0-9]*" novalidate readonly>
+    </span> 
     <span>  
       <label for="distance">afstand</label>
       <input type="number" id="distance" value="10" inputmode="decimal" pattern="[0-9]*" novalidate>
@@ -170,6 +179,11 @@
       <label for="duration">gedurende</label>
       <input type="number" id="duration" value="15" inputmode="decimal" pattern="[0-9]*" novalidate>
       <label for="duration">minuten</label>
+    </span>
+    <span>
+      <label for="verbruik">(verbruik</label>
+      <input type="number" id="verbuik" value="15" inputmode="decimal" pattern="[0-9]*" novalidate readonly>
+      kWh/km)
     </span>
     <span class="buttons">
       <input type="submit" id="modal-control" onclick="showResult(); return false" value="toon resultaat">
