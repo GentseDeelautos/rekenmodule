@@ -78,7 +78,7 @@ describe('Formulas', () => {
     })
     describe('coop formule', () => {
       const variables = settings['Partago coop'].variables
-      it('xxx', () => {
+      xit('xxx', () => {
         const text = this.frag.textContent
           .split('beginners')[1]
           // .split('genieters')[0]
