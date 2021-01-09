@@ -103,7 +103,7 @@ describe('Formulas', () => {
       })
     })
   })
-  xdescribe('GreenMobility', () => {
+  describe('GreenMobility', () => {
     beforeAll(async () => {
       const response = await fetch('https://www.greenmobility.com/be/nl/prijzen/')
       this.frag = document.createRange().createContextualFragment(await response.text())
@@ -137,22 +137,20 @@ describe('Formulas', () => {
       describe('over time', () =>
         it('still costs the same as of 01/01/2021', 
           () => expect(this.text).toContain(`Anders rijd je verder aan € ${overTimeCost.toLocaleString('nl-BE')}/minuut.`)))
-      const expectCorrectValuesFor = (index, name) => {
-        const { variables: { price, maxDistance, maxTime } } = settings[`GreenMobility ${name} pakket`]
-        const duration = moment.duration(maxTime, 'minutes')
-        const unit = duration.locale('nl').humanize().split(' ')[1]
-        const unit2 = duration.locale('en').humanize().split(' ')[1]
-
-        const period = duration.locale('en').get(unit2) + unit
+      const expectCorrectValuesFor = (index, values, unitNl) => {
+        const [[unitEn, value]] = Object.entries(values)
+        const { variables: { price, maxDistance, maxTime } } = settings[`GreenMobility ${value} ${unitNl} pakket`]
+        const duration = luxon.Duration.fromObject({ minutes: maxTime, locale: 'nl-BE' })
+        const period = `${duration.as(unitEn)}${unitNl}`
         expect(this.textBlocks[index]).toMatch(new RegExp(`${price} Euro\\s*${period}[\\s\\S]*incl. ${maxDistance} km`))
       }  
-      describe('3 uur', () => it('still means the same as of 01/01/2021', () => expectCorrectValuesFor(0, '3 uur')))
-      describe('5 uur', () => it('still means the same as of 01/01/2021', () => expectCorrectValuesFor(1, '5 uur')))
-      describe('10 uur', () => it('still means the same as of 01/01/2021', () => expectCorrectValuesFor(2, '10 uur')))
-      describe('1 dag', () => it('still means the same as of 01/01/2021', () => expectCorrectValuesFor(3, '1 dag')))
-      describe('2 dagen', () => it('still means the same as of 01/01/2021', () => expectCorrectValuesFor(4, '2 dagen')))
-      describe('3 dagen', () => it('still means the same as of 01/01/2021', () => expectCorrectValuesFor(5, '3 dagen')))
-      describe('7 dagen', () => it('still means the same as of 01/01/2021', () => expectCorrectValuesFor(6, '7 dagen')))
+      describe('3 uur', () => it('still means the same as of 01/01/2021', () => expectCorrectValuesFor(0, { hours: 3 },'uur')))
+      describe('5 uur', () => it('still means the same as of 01/01/2021', () => expectCorrectValuesFor(1, { hours: 5 }, 'uur')))
+      describe('10 uur', () => it('still means the same as of 01/01/2021', () => expectCorrectValuesFor(2, { hours: 10}, 'uur')))
+      describe('1 dag', () => it('still means the same as of 01/01/2021', () => expectCorrectValuesFor(3, { days: 1 }, 'dag')))
+      describe('2 dagen', () => it('still means the same as of 01/01/2021', () => expectCorrectValuesFor(4, { days: 2 }, 'dagen')))
+      describe('3 dagen', () => it('still means the same as of 01/01/2021', () => expectCorrectValuesFor(5, { days: 3 }, 'dagen')))
+      describe('7 dagen', () => it('still means the same as of 01/01/2021', () => expectCorrectValuesFor(6, { days: 7 }, 'dagen')))
     })
   })
 })
