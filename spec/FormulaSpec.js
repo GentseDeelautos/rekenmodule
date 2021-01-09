@@ -42,6 +42,9 @@ describe('Formulas', () => {
         })
         it('still has the same free time range as of 01/01/2021', () =>
           expect(this.ritPrijzen[planIndex]).toContain(`gratis tussen ${freeTimeRange[0]} en ${freeTimeRange[1]}`))
+        
+        // next test is important because of the calculation algorithm depends on it
+        it('has a free range starting from midnight', () => expect(freeTimeRange[0]).toEqual('0:00'))  
       })
       describe('grote bundel', () => {
         const { freeTimeRange, startCostCredits, creditsPerKwh } = settings['Partago grote bundel'].variables
