@@ -43,8 +43,13 @@ describe('Formulas', () => {
         it('still has the same free time range as of 01/01/2021', () =>
           expect(this.ritPrijzen[planIndex]).toContain(`gratis tussen ${freeTimeRange[0]} en ${freeTimeRange[1]}`))
         
-        // next test is important because of the calculation algorithm depends on it
-        it('has a free range starting from midnight', () => expect(freeTimeRange[0]).toEqual('0:00'))  
+        // next tests are important because of the calculation algorithm depends on it
+        it('has a free range starting from midnight', () => expect(freeTimeRange[0]).toEqual('0:00'))
+        it('DST changes happen inside free range', () =>{
+          luxon.Settings.defaultZoneName = 'Europe/Brussels'
+          const beforeDST = luxon.DateTime.fromISO('2021-03-28T00:00:00')
+          expect(beforeDST.plus({ hours: freeTimeRange[1].split(':')[0] }).hour).toEqual(7)
+        })
       })
       describe('grote bundel', () => {
         const { freeTimeRange, startCostCredits, creditsPerKwh } = settings['Partago grote bundel'].variables

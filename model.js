@@ -1,3 +1,5 @@
+
+
 const Partago = {
   nonCoop: {
     variables: {
