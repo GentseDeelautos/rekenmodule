@@ -23,14 +23,16 @@ const Partago = (() => {
   const calculateDistanceCredits = ({ distance, kWhPerKm, creditsPerKwh }) =>
     distance * kWhPerKm * creditsPerKwh
 
-  const getKeyValues = ({ startTime, timeRange, distanceRange, variables }) => {
+  
+
+  const getKeyValues = ({ startTime, timeRangeMs, distanceRange, variables }) => {
     const { startCostCredits, euroPerCredit, kWhPerKm, creditsPerKwh, freeTimeRange } = variables
     const [hours, minutes] = freeTimeRange[1].split(':')
     const freeTime = Duration.fromObject({
       hours: parseInt(hours), 
       minutes: parseInt(minutes) })
 
-    return [].concat(timeRange).reduce((acc, milliSeconds) => [
+    return [].concat(timeRangeMs).reduce((acc, milliSeconds) => [
       ...acc, 
       ...[].concat(distanceRange).reduce((acc, distance) => [
         ...acc,
@@ -108,9 +110,9 @@ const settings = {
     variables: {
       euroPerKw: 1.4
     },
-    getKeyValues: ({ startTime, timeRange, distanceRange, variables }) => {
+    getKeyValues: ({ startTime, timeRangeMs, distanceRange, variables }) => {
       const { kWhPerKm, euroPerKw } = variables
-      return [].concat(timeRange).reduce((acc, until) => (
+      return [].concat(timeRangeMs).reduce((acc, until) => (
         [...acc, ...[].concat(distanceRange).reduce((acc2, distance) => (
           [...acc2, [until + startTime.valueOf(), distance, Math.round(100 * distance * kWhPerKm * euroPerKw) / 100]]
         ), [])]
@@ -196,7 +198,7 @@ const settings = {
 function calculate ({ name, distance, duration, kWhPerKm, startTime }) {
   const { formula, variables, getKeyValues } = settings[name] || {}
   if (getKeyValues) 
-    return getKeyValues({ startTime, timeRange: duration * 60 * 1000, distanceRange: distance, variables: { ...variables, kWhPerKm } })[0][2]
+    return getKeyValues({ startTime, timeRangeMs: duration * 60 * 1000, distanceRange: distance, variables: { ...variables, kWhPerKm } })[0][2]
   return math.evaluate(formula, { ...variables, kWhPerKm, distance, duration })
 }
 

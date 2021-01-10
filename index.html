@@ -83,7 +83,7 @@
         if (getKeyValues) {
           const extendedSeries = getKeyValues({ 
             startTime: DateTime.local().setLocale('Europe/Brussels'),
-            timeRange: [0, 24 * 60 * 60 * 1000 ],
+            timeRangeMs: [0, 24 * 60 * 60 * 1000 ],
             distanceRange: distance,
             variables: { ...variables, kWhPerKm }
           })
