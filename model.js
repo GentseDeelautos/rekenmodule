@@ -3,43 +3,41 @@ const { DateTime, Interval, Duration } = luxon
 const Partago = (() => {
   const calculateTimeCredits = ({ startTime, duration, freeTime}) => {
     const endTime = startTime.plus(duration)
-    const getStartOfDayCredits = time => Math.floor(Math.max(
-      0,
-      Interval.fromDateTimes(
-        time.startOf('day').set({ hours: freeTime.hours }),
-        time
-      ).length('minutes'))
-    )
+
+    const getStartOfDayCredits = until => {
+      const from = until.startOf('day').set({ hours: freeTime.hours })
+
+      if (from > until) return 0
+      return Interval.fromDateTimes(from, until).length('minutes')
+    }
+
     const numFullDays = Math.floor(
       Interval.fromDateTimes(startTime.startOf('day'), endTime).length('days'))
     const fullDaysCredits = numFullDays * (24 * 60 - freeTime.minutes)
+    const offsetCredits = getStartOfDayCredits(startTime)
+    const trailingCredits = getStartOfDayCredits(endTime)
 
-    return fullDaysCredits + getStartOfDayCredits(endTime) - getStartOfDayCredits(startTime)
+    return fullDaysCredits + trailingCredits - offsetCredits
   }
 
   const calculateDistanceCredits = ({ distance, kWhPerKm, creditsPerKwh }) =>
     distance * kWhPerKm * creditsPerKwh
 
-  const getKeyValues = ({ startMillis, timeRange, distanceRange, variables }) => {
+  const getKeyValues = ({ startTime, timeRange, distanceRange, variables }) => {
     const { startCostCredits, euroPerCredit, kWhPerKm, creditsPerKwh, freeTimeRange } = variables
     const [hours, minutes] = freeTimeRange[1].split(':')
     const freeTime = Duration.fromObject({
       hours: parseInt(hours), 
       minutes: parseInt(minutes) })
-    // TODO: for now, we base startTime on current time and offsetMinutes.
-    //       Ideally, startTime is set directly by the end user.
-    const startTime = DateTime.local().setLocale('Europe/Brussels')
-      .startOf('day')
-      .plus({ minutes: Duration.fromMillis(startMillis).as('minutes') })
 
     return [].concat(timeRange).reduce((acc, milliSeconds) => [
       ...acc, 
       ...[].concat(distanceRange).reduce((acc, distance) => [
         ...acc,
         [
-          milliSeconds + startMillis, 
+          milliSeconds + startTime.valueOf(), 
           distance, 
-          euroPerCredit * (startCostCredits + 
+          euroPerCredit * (startCostCredits +
             calculateDistanceCredits({ distance, kWhPerKm, creditsPerKwh }) +
             calculateTimeCredits({ 
               startTime,
@@ -110,11 +108,11 @@ const settings = {
     variables: {
       euroPerKw: 1.4
     },
-    getKeyValues: ({ startMillis, timeRange, distanceRange, variables }) => {
+    getKeyValues: ({ startTime, timeRange, distanceRange, variables }) => {
       const { kWhPerKm, euroPerKw } = variables
-      return [].concat(timeRange).reduce((acc, time) => (
+      return [].concat(timeRange).reduce((acc, until) => (
         [...acc, ...[].concat(distanceRange).reduce((acc2, distance) => (
-          [...acc2, [time + startMillis, distance, Math.round(100 * distance * kWhPerKm * euroPerKw) / 100]]
+          [...acc2, [until + startTime.valueOf(), distance, Math.round(100 * distance * kWhPerKm * euroPerKw) / 100]]
         ), [])]
       ), [])
     }
@@ -195,10 +193,10 @@ const settings = {
   'GreenMobility 7 dagen pakket': { variables: { ...GreenMobilityExcessionCost, price: 350, maxTime: 7 * 24 * 60 , maxDistance: 1000 }, formula: GreenMobilityPakketFormula },
 }
 
-function calculate ({ name, distance, duration, kWhPerKm }) {
+function calculate ({ name, distance, duration, kWhPerKm, startTime }) {
   const { formula, variables, getKeyValues } = settings[name] || {}
   if (getKeyValues) 
-    return getKeyValues({ startMillis: Date.now(), timeRange: duration * 60 * 1000, distanceRange: distance, variables: { ...variables, kWhPerKm } })[0][2]
+    return getKeyValues({ startTime, timeRange: duration * 60 * 1000, distanceRange: distance, variables: { ...variables, kWhPerKm } })[0][2]
   return math.evaluate(formula, { ...variables, kWhPerKm, distance, duration })
 }
 
