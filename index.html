@@ -29,25 +29,26 @@
       const kWhPerKm = parseInt(document.getElementById('kWhPer100Km').value)/100
       const startTimeMinutes = parseInt(document.getElementById('startTimeMinutes').value)
       const startTimeHours = parseInt(document.getElementById('startTimeHours').value)
-      const startMillis = (startTimeHours * 60 + startTimeMinutes) * 60 * 1000
-      showResultBox(distance, duration, kWhPerKm, startMillis)
+      const startTime = DateTime.local().setLocale('Europe/Brussels')
+        .set({ hours: startTimeHours, minutes: startTimeMinutes })
+      showResultBox(distance, duration, kWhPerKm, startTime)
       } catch (e) {
         console.error(e)
       }
-      // showFixedDistanceGraph(distance, kWhPerKm, startMillis)
-      // showFixedTimeGraph(distance, duration, kWhPerKm, startMillis)
+      // showFixedDistanceGraph(distance, kWhPerKm, startTime)
+      // showFixedTimeGraph(distance, duration, kWhPerKm, startTime)
       return false
     }
 
-    function showResultBox (distance, duration, kWhPerKm, startMillis) {
+    function showResultBox (distance, duration, kWhPerKm, startTime) {
       const lines = []
       // TODO: push up cookie logic
       document.cookie=`distance=${distance}`
       document.cookie=`duration=${duration}`
       document.cookie=`kWhPer100Km=${kWhPerKm *  100}`
-      document.cookie=`startMillis=${startMillis}`
+      document.cookie=`startMillis=${startTime.toMillis()}`
       for (name in settings) {
-        lines.push(`<strong>${ name }:</strong>&nbsp;${calculateRounded({ name, distance, duration, kWhPerKm })}&euro;`)
+        lines.push(`<strong>${ name }:</strong>&nbsp;${calculateRounded({ name, distance, duration, kWhPerKm, startTime })}&euro;`)
       }
       document.getElementById('result').innerHTML = lines.join('<br>')
     }
@@ -70,7 +71,7 @@
       });
     }
 
-    function showFixedDistanceGraph (distance, kWhPerKm) {
+    function showFixedDistanceGraph (distance, kWhPerKm, startTIme) {
       const series = []
       const now = new Date()
       now.setHours(7)
@@ -82,14 +83,14 @@
         const color = d3.interpolateRainbow(i/array.length) 
         if (getKeyValues) {
           const extendedSeries = getKeyValues({ 
-            startMillis: now.valueOf(),
+            startTime: DateTime.local().setLocale('Europe/Brussels'),
             timeRange: [0, 24 * 60 * 60 * 1000 ],
             distanceRange: distance,
             variables: { ...variables, kWhPerKm }
           })
           data.push(...extendedSeries.map(([time, _, cost]) => ([time, cost])))
         } else {
-          for (let duration = 0; duration < 24 * 60 ; duration += 5) data.push([now.valueOf() + duration * 60 * 1000, calculateRounded({ name, distance, duration })])
+          for (let duration = 0; duration < 24 * 60 ; duration += 5) data.push([now.valueOf() + duration * 60 * 1000, calculateRounded({ name, distance, duration, startTime })])
         }
         series.push({ name, data, color })
       })
@@ -119,13 +120,13 @@
       })
     }
 
-    function showFixedTimeGraph (distance, duration, kWhPerKm) {
+    function showFixedTimeGraph (distance, duration, kWhPerKm, startTime) {
       const series = []
       const maxKm = duration / 60 * 120 // maximum 120 distance/h
       Object.entries(settings).forEach(([name], i, array) => {
         const data = []
         const color = d3.interpolateRainbow(i/array.length) 
-        for (let distance = 0; distance <= maxKm; distance++) data.push(calculateRounded({ name, distance, duration, kWhPerKm }))
+        for (let distance = 0; distance <= maxKm; distance++) data.push(calculateRounded({ name, distance, duration, kWhPerKm, startTime }))
         series.push({ name, data, color })
       })
       showGraph(series, 'fixedTimeGraph', `Kost per afstand voor ${duration}&thinsp;min`)

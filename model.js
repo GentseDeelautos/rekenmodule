@@ -1,6 +1,6 @@
-const Partago = (() => {
-  const { DateTime, Interval, Duration } = luxon
+const { DateTime, Interval, Duration } = luxon
 
+const Partago = (() => {
   const calculateTimeCredits = ({ startTime, duration, freeTime}) => {
     const endTime = startTime.plus(duration)
     const getStartOfDayCredits = time => Math.floor(Math.max(
@@ -202,6 +202,6 @@ function calculate ({ name, distance, duration, kWhPerKm }) {
   return math.evaluate(formula, { ...variables, kWhPerKm, distance, duration })
 }
 
-function calculateRounded (opties) {
-  return Math.round(calculate(opties) * 100) / 100
+function calculateRounded (options) {
+  return Math.round(calculate(options) * 100) / 100
 }
