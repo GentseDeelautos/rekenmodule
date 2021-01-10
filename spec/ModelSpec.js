@@ -6,42 +6,44 @@ describe('Model', () => {
     const creditsPerKwh = 15
     const creditsPerKm = creditsPerKwh * kWhPerKm
     const params = { name: 'Partago grote bundel', distance: 0, duration: 0 }
+    const freeTimeRange = ['0:00', '6:00']
 
     describe('grote bundel', () => {
       const pricePerCredit = 300 / 4800 
       const startupFee = pricePerCredit * startupCredits
       const { getKeyValues, variables } = settings[params.name]
-      const startMillis = new Date('2021-01-01T00:00:00.00').valueOf()
+      const startTime = luxon.DateTime.fromISO('2021-01-01T06:00:00.00', { zone: 'Europe/Brussels' })
 
       it('has a startup fee', () => 
-        expect(getKeyValues({ startMillis, timeRange: 0, distanceRange: 0, variables: { ...variables, kWhPerKm } }))
-          .toEqual([[startMillis, 0, startupFee]]))
+        expect(getKeyValues({ startTime, timeRange: 0, distanceRange: 0, variables: { ...variables, kWhPerKm } }))
+          .toEqual([[startTime.valueOf(), 0, startupFee]]))
 
       it('has a price per distance', () =>
-        expect(getKeyValues({ startMillis, timeRange: 0, distanceRange: 100, variables: { ...variables, kWhPerKm } }))
-          .toEqual([[startMillis, 100, startupFee + 100 * creditsPerKm * pricePerCredit]]))
+        expect(getKeyValues({ startTime, timeRange: 0, distanceRange: 100, variables: { ...variables, kWhPerKm } }))
+          .toEqual([[startTime.valueOf(), 100, startupFee + 100 * creditsPerKm * pricePerCredit]]))
 
       it('has a price per minute', () =>
-        expect(getKeyValues({ startMillis, timeRange: 60 * 1000, distanceRange: 0, variables: { ...variables, kWhPerKm } }))
-          .toEqual([[startMillis + 60 * 1000, 0, startupFee + creditsPerMinute * pricePerCredit]]))
+        expect(getKeyValues({ startTime, timeRange: 60 * 1000, distanceRange: 0, variables: { ...variables, kWhPerKm } }))
+          .toEqual([[startTime.valueOf() + 60 * 1000, 0, startupFee + creditsPerMinute * pricePerCredit]]))
 
       it('can calculate ranges' , () => 
-        expect(getKeyValues({ startMillis, timeRange: [0, 60 * 1000], distanceRange: [0, 100], variables: { ...variables, kWhPerKm } }))
+        expect(getKeyValues({ startTime, timeRange: [0, 60 * 1000], distanceRange: [0, 100], variables: { ...variables, kWhPerKm } }))
           .toEqual([
-            [startMillis, 0, startupFee],
-            [startMillis, 100, startupFee + 100 * creditsPerKm * pricePerCredit],
-            [startMillis + 60 * 1000, 0, startupFee + creditsPerMinute * pricePerCredit],
-            [startMillis + 60 * 1000, 100, startupFee + (100 * creditsPerKm + creditsPerMinute) * pricePerCredit]
+            [startTime.valueOf(), 0, startupFee],
+            [startTime.valueOf(), 100, startupFee + 100 * creditsPerKm * pricePerCredit],
+            [startTime.valueOf() + 60 * 1000, 0, startupFee + creditsPerMinute * pricePerCredit],
+            [startTime.valueOf() + 60 * 1000, 100, startupFee + (100 * creditsPerKm + creditsPerMinute) * pricePerCredit]
           ]))
           
-      // TODO: can't find a trace of the free time on the website anymore;
-      // created https://www.loomio.org/d/RCqKmtpN/nachttarief for it  
-      xit('has free time per day', () =>
-        expect(calculate({ ...params, duration: 18 * 60 + 1 }))
-          .toEqual(startupFee + (18 * 60) * creditsPerMinute * pricePerCredit))
-      xit('has limited free time per day', () =>
-        expect(calculate({ ...params, duration: 24 * 60 + 1 }))
-          .toEqual(startupFee + (18 * 60 + 1) * creditsPerMinute * pricePerCredit))
+      xit('has a free time range every day', () => {
+        expect(getKeyValues({ startTime, timeRange: 24 * 60 * 60 * 1000, distanceRange: 0, variables: { ...variables, kWhPerKm, freeTimeRange } }))
+          .toEqual([[startTime.valueOf() + 24 * 60 * 60 * 1000, 0, startupFee + creditsPerMinute * 60 * 18 * pricePerCredit]])
+      })
+
+      it('has a free time range on the first day', () => {
+        expect(getKeyValues({ startTime: startTime.startOf('day'), timeRange: 60 * 1000, distanceRange: 0, variables: { ...variables, kWhPerKm, freeTimeRange } }))
+          .toEqual([[startTime.startOf('day').valueOf() + 60 * 1000, 0, startupFee]])
+      })
     })
   })
   xdescribe('Green Mobility', () =>
