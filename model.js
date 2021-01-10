@@ -13,7 +13,7 @@ const Partago = (() => {
 
     const numFullDays = Math.floor(
       Interval.fromDateTimes(startTime.startOf('day'), endTime).length('days'))
-    const fullDaysCredits = numFullDays * (24 * 60 - freeTime.minutes)
+    const fullDaysCredits = numFullDays * (24 * 60 - freeTime.as('minutes'))
     const offsetCredits = getStartOfDayCredits(startTime)
     const trailingCredits = getStartOfDayCredits(endTime)
 

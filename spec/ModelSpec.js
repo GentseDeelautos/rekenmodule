@@ -35,14 +35,15 @@ describe('Model', () => {
             [startTime.valueOf() + 60 * 1000, 100, startupFee + (100 * creditsPerKm + creditsPerMinute) * pricePerCredit]
           ]))
           
-      xit('has a free time range every day', () => {
-        expect(getKeyValues({ startTime, timeRange: 24 * 60 * 60 * 1000, distanceRange: 0, variables: { ...variables, kWhPerKm, freeTimeRange } }))
-          .toEqual([[startTime.valueOf() + 24 * 60 * 60 * 1000, 0, startupFee + creditsPerMinute * 60 * 18 * pricePerCredit]])
-      })
 
       it('has a free time range on the first day', () => {
         expect(getKeyValues({ startTime: startTime.startOf('day'), timeRange: 60 * 1000, distanceRange: 0, variables: { ...variables, kWhPerKm, freeTimeRange } }))
           .toEqual([[startTime.startOf('day').valueOf() + 60 * 1000, 0, startupFee]])
+      })
+
+      it('has a free time range every day', () => {
+        expect(getKeyValues({ startTime, timeRange: 24 * 60 * 60 * 1000, distanceRange: 0, variables: { ...variables, kWhPerKm, freeTimeRange } }))
+          .toEqual([[startTime.valueOf() + 24 * 60 * 60 * 1000, 0, startupFee + creditsPerMinute * 60 * 18 * pricePerCredit]])
       })
     })
   })
