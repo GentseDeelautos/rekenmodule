@@ -46,7 +46,6 @@
       document.cookie=`distance=${distance}`
       document.cookie=`duration=${duration}`
       document.cookie=`kWhPer100Km=${kWhPerKm *  100}`
-      document.cookie=`startMillis=${startTime.toMillis()}`
       for (name in settings) {
         lines.push(`<strong>${ name }:</strong>&nbsp;${calculateRounded({ name, distance, duration, kWhPerKm, startTime })}&euro;`)
       }
@@ -138,18 +137,12 @@
       const distance = (document.cookie.match(/distance=(\d*)/) || [])[1]
       const duration = (document.cookie.match(/duration=(\d*)/) || [])[1]
       const kWhPer100Km = (document.cookie.match(/kWhPer100Km=(\d*)/) || [])[1] 
-      const startMillis = (document.cookie.match(/startMillis=(\d*)/) || [])[1] 
+      const startOffset = Duration.fromObject({ hours: 6, minutes: 0 }) 
       if (distance) document.getElementById('distance').value = distance
       if (duration) document.getElementById('duration').value = duration
       if (kWhPer100Km) document.getElementById('kWhPer100Km').value = kWhPer100Km
-      if (startMillis) {
-        const hourInMs = 60 * 60 * 1000
-        const totalMinutes = startMillis / (60 * 1000)
-        const minutes = totalMinutes % 60
-        const hours = (totalMinutes - minutes) / 60 
-        document.getElementById('startTimeMinutes').value = minutes
-        document.getElementById('startTimeHours').value = hours
-      }
+      document.getElementById('startTimeMinutes').value = startOffset.minutes
+      document.getElementById('startTimeHours').value = startOffset.hours
     }
   </script>
   <style>
