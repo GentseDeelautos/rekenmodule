@@ -29,23 +29,23 @@
       const kWhPerKm = parseInt(document.getElementById('kWhPer100Km').value)/100
       const startTimeMinutes = parseInt(document.getElementById('startTimeMinutes').value)
       const startTimeHours = parseInt(document.getElementById('startTimeHours').value)
-      const startTime = (startTimeHours * 60 + startTimeMinutes) * 60 * 1000
-      showResultBox(distance, duration, kWhPerKm, startTime)
+      const startMillis = (startTimeHours * 60 + startTimeMinutes) * 60 * 1000
+      showResultBox(distance, duration, kWhPerKm, startMillis)
       } catch (e) {
         console.error(e)
       }
-      // showFixedDistanceGraph(distance, kWhPerKm, startTime)
-      // showFixedTimeGraph(distance, duration, kWhPerKm, startTime)
+      // showFixedDistanceGraph(distance, kWhPerKm, startMillis)
+      // showFixedTimeGraph(distance, duration, kWhPerKm, startMillis)
       return false
     }
 
-    function showResultBox (distance, duration, kWhPerKm, startTime) {
+    function showResultBox (distance, duration, kWhPerKm, startMillis) {
       const lines = []
       // TODO: push up cookie logic
       document.cookie=`distance=${distance}`
       document.cookie=`duration=${duration}`
       document.cookie=`kWhPer100Km=${kWhPerKm *  100}`
-      document.cookie=`startTime=${startTime}`
+      document.cookie=`startMillis=${startMillis}`
       for (name in settings) {
         lines.push(`<strong>${ name }:</strong>&nbsp;${calculateRounded({ name, distance, duration, kWhPerKm })}&euro;`)
       }
@@ -82,7 +82,7 @@
         const color = d3.interpolateRainbow(i/array.length) 
         if (getKeyValues) {
           const extendedSeries = getKeyValues({ 
-            startTime: now.valueOf(),
+            startMillis: now.valueOf(),
             timeRange: [0, 24 * 60 * 60 * 1000 ],
             distanceRange: distance,
             variables: { ...variables, kWhPerKm }
@@ -137,13 +137,13 @@
       const distance = (document.cookie.match(/distance=(\d*)/) || [])[1]
       const duration = (document.cookie.match(/duration=(\d*)/) || [])[1]
       const kWhPer100Km = (document.cookie.match(/kWhPer100Km=(\d*)/) || [])[1] 
-      const startTime = (document.cookie.match(/startTime=(\d*)/) || [])[1] 
+      const startMillis = (document.cookie.match(/startMillis=(\d*)/) || [])[1] 
       if (distance) document.getElementById('distance').value = distance
       if (duration) document.getElementById('duration').value = duration
       if (kWhPer100Km) document.getElementById('kWhPer100Km').value = kWhPer100Km
-      if (startTime) {
+      if (startMillis) {
         const hourInMs = 60 * 60 * 1000
-        const totalMinutes = startTime / (60 * 1000)
+        const totalMinutes = startMillis / (60 * 1000)
         const minutes = totalMinutes % 60
         const hours = (totalMinutes - minutes) / 60 
         document.getElementById('startTimeMinutes').value = minutes
