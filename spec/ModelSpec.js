@@ -11,27 +11,27 @@ describe('Model', () => {
       const pricePerCredit = 300 / 4800 
       const startupFee = pricePerCredit * startupCredits
       const { getKeyValues, variables } = settings[params.name]
-      const startTime = new Date('2021-01-01T00:00:00.00').valueOf()
+      const startMillis = new Date('2021-01-01T00:00:00.00').valueOf()
 
       it('has a startup fee', () => 
-        expect(getKeyValues({ startTime, timeRange: 0, distanceRange: 0, variables: { ...variables, kWhPerKm } }))
-          .toEqual([[startTime, 0, startupFee]]))
+        expect(getKeyValues({ startMillis, timeRange: 0, distanceRange: 0, variables: { ...variables, kWhPerKm } }))
+          .toEqual([[startMillis, 0, startupFee]]))
 
       it('has a price per distance', () =>
-        expect(getKeyValues({ startTime, timeRange: 0, distanceRange: 100, variables: { ...variables, kWhPerKm } }))
-          .toEqual([[startTime, 100, startupFee + 100 * creditsPerKm * pricePerCredit]]))
+        expect(getKeyValues({ startMillis, timeRange: 0, distanceRange: 100, variables: { ...variables, kWhPerKm } }))
+          .toEqual([[startMillis, 100, startupFee + 100 * creditsPerKm * pricePerCredit]]))
 
       it('has a price per minute', () =>
-        expect(getKeyValues({ startTime, timeRange: 60 * 1000, distanceRange: 0, variables: { ...variables, kWhPerKm } }))
-          .toEqual([[startTime + 60 * 1000, 0, startupFee + creditsPerMinute * pricePerCredit]]))
+        expect(getKeyValues({ startMillis, timeRange: 60 * 1000, distanceRange: 0, variables: { ...variables, kWhPerKm } }))
+          .toEqual([[startMillis + 60 * 1000, 0, startupFee + creditsPerMinute * pricePerCredit]]))
 
       it('can calculate ranges' , () => 
-        expect(getKeyValues({ startTime, timeRange: [0, 60 * 1000], distanceRange: [0, 100], variables: { ...variables, kWhPerKm } }))
+        expect(getKeyValues({ startMillis, timeRange: [0, 60 * 1000], distanceRange: [0, 100], variables: { ...variables, kWhPerKm } }))
           .toEqual([
-            [startTime, 0, startupFee],
-            [startTime, 100, startupFee + 100 * creditsPerKm * pricePerCredit],
-            [startTime + 60 * 1000, 0, startupFee + creditsPerMinute * pricePerCredit],
-            [startTime + 60 * 1000, 100, startupFee + (100 * creditsPerKm + creditsPerMinute) * pricePerCredit]
+            [startMillis, 0, startupFee],
+            [startMillis, 100, startupFee + 100 * creditsPerKm * pricePerCredit],
+            [startMillis + 60 * 1000, 0, startupFee + creditsPerMinute * pricePerCredit],
+            [startMillis + 60 * 1000, 100, startupFee + (100 * creditsPerKm + creditsPerMinute) * pricePerCredit]
           ]))
           
       // TODO: can't find a trace of the free time on the website anymore;

@@ -16,7 +16,6 @@ const Partago = (() => {
     const numFullDays = Math.floor(
       Interval.fromDateTimes(startTime.startOf('day'), endTime).length('days'))
     const fullDaysCredits = numFullDays * (24 * 60 - freeTimeMinutes)
-    console.log(getStartOfDayCredits(startTime))
 
     return fullDaysCredits + getStartOfDayCredits(endTime) - getStartOfDayCredits(startTime)
   }
@@ -24,7 +23,7 @@ const Partago = (() => {
   const calculateDistanceCredits = ({ distance, kWhPerKm, creditsPerKwh }) =>
     distance * kWhPerKm * creditsPerKwh
 
-  const getKeyValues = ({ startTime, timeRange, distanceRange, variables }) => {
+  const getKeyValues = ({ startMillis, timeRange, distanceRange, variables }) => {
     const { startCostCredits, euroPerCredit, kWhPerKm, creditsPerKwh, freeTimeRange } = variables
     const [hours, minutes] = freeTimeRange[1].split(':')
     const freeTimeDuration = Duration.fromObject({
@@ -36,12 +35,12 @@ const Partago = (() => {
       ...[].concat(distanceRange).reduce((acc, distance) => [
         ...acc,
         [
-          time + startTime, 
+          time + startMillis, 
           distance, 
           euroPerCredit * (startCostCredits + 
             calculateDistanceCredits({ distance, kWhPerKm, creditsPerKwh }) +
             calculateTimeCredits({ 
-              offsetMinutes: Duration.fromMillis(startTime).as('minutes'),
+              offsetMinutes: Duration.fromMillis(startMillis).as('minutes'),
               durationMinutes: Duration.fromMillis(time).as('minutes'),
               freeTimeMinutes: freeTimeDuration.as('minutes')
             })
@@ -109,11 +108,11 @@ const settings = {
     variables: {
       euroPerKw: 1.4
     },
-    getKeyValues: ({ startTime, timeRange, distanceRange, variables }) => {
+    getKeyValues: ({ startMillis, timeRange, distanceRange, variables }) => {
       const { kWhPerKm, euroPerKw } = variables
       return [].concat(timeRange).reduce((acc, time) => (
         [...acc, ...[].concat(distanceRange).reduce((acc2, distance) => (
-          [...acc2, [time + startTime, distance, Math.round(100 * distance * kWhPerKm * euroPerKw) / 100]]
+          [...acc2, [time + startMillis, distance, Math.round(100 * distance * kWhPerKm * euroPerKw) / 100]]
         ), [])]
       ), [])
     }
@@ -197,7 +196,7 @@ const settings = {
 function calculate ({ name, distance, duration, kWhPerKm }) {
   const { formula, variables, getKeyValues } = settings[name] || {}
   if (getKeyValues) 
-    return getKeyValues({ startTime: Date.now(), timeRange: duration * 60 * 1000, distanceRange: distance, variables: { ...variables, kWhPerKm } })[0][2]
+    return getKeyValues({ startMillis: Date.now(), timeRange: duration * 60 * 1000, distanceRange: distance, variables: { ...variables, kWhPerKm } })[0][2]
   return math.evaluate(formula, { ...variables, kWhPerKm, distance, duration })
 }
 
