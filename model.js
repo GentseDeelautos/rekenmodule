@@ -2,7 +2,8 @@ const Partago = (() => {
   const { DateTime, Interval, Duration } = luxon
 
   const calculateTimeCredits = ({ startTime, durationMinutes, freeTimeMinutes }) => {
-    const endTime = startTime.plus({ minutes: durationMinutes })
+    const duration = Duration.fromObject({ minutes: durationMinutes })
+    const endTime = startTime.plus(duration)
     const getStartOfDayCredits = time => Math.floor(Math.max(
       0,
       Interval.fromDateTimes(
