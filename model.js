@@ -1,18 +1,18 @@
 const Partago = (() => {
   const { DateTime, Interval, Duration } = luxon
 
-  const calculateTimeCredits = ({ startTime, duration, freeTimeMinutes }) => {
+  const calculateTimeCredits = ({ startTime, duration, freeTime}) => {
     const endTime = startTime.plus(duration)
     const getStartOfDayCredits = time => Math.floor(Math.max(
       0,
       Interval.fromDateTimes(
-        time.startOf('day').set({ hours: freeTimeMinutes / 60 }),
+        time.startOf('day').set({ hours: freeTime.hours }),
         time
       ).length('minutes'))
     )
     const numFullDays = Math.floor(
       Interval.fromDateTimes(startTime.startOf('day'), endTime).length('days'))
-    const fullDaysCredits = numFullDays * (24 * 60 - freeTimeMinutes)
+    const fullDaysCredits = numFullDays * (24 * 60 - freeTime.minutes)
 
     return fullDaysCredits + getStartOfDayCredits(endTime) - getStartOfDayCredits(startTime)
   }
@@ -23,7 +23,7 @@ const Partago = (() => {
   const getKeyValues = ({ startMillis, timeRange, distanceRange, variables }) => {
     const { startCostCredits, euroPerCredit, kWhPerKm, creditsPerKwh, freeTimeRange } = variables
     const [hours, minutes] = freeTimeRange[1].split(':')
-    const freeTimeDuration = Duration.fromObject({
+    const freeTime = Duration.fromObject({
       hours: parseInt(hours), 
       minutes: parseInt(minutes) })
     // TODO: for now, we base startTime on current time and offsetMinutes.
@@ -44,7 +44,7 @@ const Partago = (() => {
             calculateTimeCredits({ 
               startTime,
               duration: Duration.fromObject({ milliSeconds }),
-              freeTimeMinutes: freeTimeDuration.as('minutes')
+              freeTime
             })
             )
         ]
