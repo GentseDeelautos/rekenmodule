@@ -4,7 +4,7 @@ const Partago = (() => {
   const calculateTimeCredits = ({ offsetMinutes, durationMinutes, freeTimeMinutes }) => {
     // TODO: for now, we base startTime on current time and offsetMinutes.
     //       Ideally, startTime is set directly by the end user.
-    const startTime = DateTime.local().startOf('day').plus({ minutes: offsetMinutes})
+    const startTime = DateTime.local().setLocale('Europe/Brussels').startOf('day').plus({ minutes: offsetMinutes})
     const endTime = startTime.plus({ minutes: durationMinutes })
     const getStartOfDayCredits = time => Math.floor(Math.max(
       0,
