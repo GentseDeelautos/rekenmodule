@@ -1,8 +1,7 @@
 const Partago = (() => {
   const { DateTime, Interval, Duration } = luxon
 
-  const calculateTimeCredits = ({ startTime, durationMinutes, freeTimeMinutes }) => {
-    const duration = Duration.fromObject({ minutes: durationMinutes })
+  const calculateTimeCredits = ({ startTime, duration, freeTimeMinutes }) => {
     const endTime = startTime.plus(duration)
     const getStartOfDayCredits = time => Math.floor(Math.max(
       0,
@@ -33,18 +32,18 @@ const Partago = (() => {
       .startOf('day')
       .plus({ minutes: Duration.fromMillis(startMillis).as('minutes') })
 
-    return [].concat(timeRange).reduce((acc, time) => [
+    return [].concat(timeRange).reduce((acc, milliSeconds) => [
       ...acc, 
       ...[].concat(distanceRange).reduce((acc, distance) => [
         ...acc,
         [
-          time + startMillis, 
+          milliSeconds + startMillis, 
           distance, 
           euroPerCredit * (startCostCredits + 
             calculateDistanceCredits({ distance, kWhPerKm, creditsPerKwh }) +
             calculateTimeCredits({ 
               startTime,
-              durationMinutes: Duration.fromMillis(time).as('minutes'),
+              duration: Duration.fromObject({ milliSeconds }),
               freeTimeMinutes: freeTimeDuration.as('minutes')
             })
             )
