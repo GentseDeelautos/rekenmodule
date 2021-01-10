@@ -46,8 +46,7 @@ describe('Formulas', () => {
         // next tests are important because of the calculation algorithm depends on it
         it('has a free range starting from midnight', () => expect(freeTimeRange[0]).toEqual('0:00'))
         it('DST changes happen inside free range', () =>{
-          luxon.Settings.defaultZoneName = 'Europe/Brussels'
-          const beforeDST = luxon.DateTime.fromISO('2021-03-28T00:00:00')
+          const beforeDST = luxon.DateTime.fromISO('2021-03-28T00:00:00', { zone: 'Europe/Brussels'})
           expect(beforeDST.plus({ hours: freeTimeRange[1].split(':')[0] }).hour).toEqual(7)
         })
       })
