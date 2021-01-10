@@ -47,7 +47,7 @@ describe('Model', () => {
       })
     })
   })
-  xdescribe('Green Mobility', () =>
+  describe('Green Mobility', () =>
     describe('3 uur pakket', () => {
       const name = 'GreenMobility 3 uur pakket'
 
