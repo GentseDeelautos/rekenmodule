@@ -1,10 +1,7 @@
 const Partago = (() => {
-  const { DateTime, Interval, Settings, Duration } = luxon
+  const { DateTime, Interval, Duration } = luxon
 
-  const calculateTimeCredits = ({ offsetMinutes, durationMinutes, freeTimeMinutes }) => {
-    // TODO: for now, we base startTime on current time and offsetMinutes.
-    //       Ideally, startTime is set directly by the end user.
-    const startTime = DateTime.local().setLocale('Europe/Brussels').startOf('day').plus({ minutes: offsetMinutes})
+  const calculateTimeCredits = ({ startTime, durationMinutes, freeTimeMinutes }) => {
     const endTime = startTime.plus({ minutes: durationMinutes })
     const getStartOfDayCredits = time => Math.floor(Math.max(
       0,
@@ -29,6 +26,11 @@ const Partago = (() => {
     const freeTimeDuration = Duration.fromObject({
       hours: parseInt(hours), 
       minutes: parseInt(minutes) })
+    // TODO: for now, we base startTime on current time and offsetMinutes.
+    //       Ideally, startTime is set directly by the end user.
+    const startTime = DateTime.local().setLocale('Europe/Brussels')
+      .startOf('day')
+      .plus({ minutes: Duration.fromMillis(startMillis).as('minutes') })
 
     return [].concat(timeRange).reduce((acc, time) => [
       ...acc, 
@@ -40,7 +42,7 @@ const Partago = (() => {
           euroPerCredit * (startCostCredits + 
             calculateDistanceCredits({ distance, kWhPerKm, creditsPerKwh }) +
             calculateTimeCredits({ 
-              offsetMinutes: Duration.fromMillis(startMillis).as('minutes'),
+              startTime,
               durationMinutes: Duration.fromMillis(time).as('minutes'),
               freeTimeMinutes: freeTimeDuration.as('minutes')
             })
