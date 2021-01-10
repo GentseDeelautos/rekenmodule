@@ -5,18 +5,16 @@
   <script src="https://cdn.jsdelivr.net/npm/mathjs@6.2.3/dist/math.min.js" integrity="sha256-jnrFf6CiZ2veyKUaL7l7FHWW/ela8txaw/J7SVZzW5o=" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/3.0.1/mini-default.min.css" integrity="sha256-Tb0Wikpef+a1/IiQ0gXyT9PsM654/3hNHHdxMwEhBLA=" crossorigin="anonymous" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/7.2.0/highcharts.js" integrity="sha256-pWlJ6y5bcww1f1YFl+ak3DjzWUFtLTiy1u1amuLuSfA=" crossorigin="anonymous"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/luxon/1.25.0/luxon.min.js"
+    integrity="sha512-OyrI249ZRX2hY/1CAD+edQR90flhuXqYqjNYFJAiflsKsMxpUYg5kbDDAVA8Vp0HMlPG/aAl1tFASi1h4eRoQw=="
+    crossorigin="anonymous"></script>
+  <!-- <script src="./models/Partago.js"></script> -->
   <script src="./model.js"></script>
-  <script src="https://d3js.org/d3.v4.min.js"> 
-  </script> 
-  <script src= 
-      "https://d3js.org/d3-color.v1.min.js"> 
-  </script> 
-  <script src= 
-      "https://d3js.org/d3-interpolate.v1.min.js"> 
-  </script> 
-  <script src= 
-      "https://d3js.org/d3- scale-chromatic.v1.min.js"> 
-  </script> 
+  <script src="https://d3js.org/d3.v4.min.js"></script> 
+  <script src="https://d3js.org/d3-color.v1.min.js"></script> 
+  <script src="https://d3js.org/d3-interpolate.v1.min.js"></script> 
+  <script src="https://d3js.org/d3- scale-chromatic.v1.min.js"></script> 
   <script>
     function onCloseIntro () {
       if (document.getElementById('dont-show-anymore').checked)
@@ -25,6 +23,7 @@
     }
 
     function showResult () {
+      try {
       const distance = parseInt(document.getElementById('distance').value)
       const duration = parseInt(document.getElementById('duration').value)
       const kWhPerKm = parseInt(document.getElementById('kWhPer100Km').value)/100
@@ -32,6 +31,9 @@
       const startTimeHours = parseInt(document.getElementById('startTimeHours').value)
       const startTime = (startTimeHours * 60 + startTimeMinutes) * 60 * 1000
       showResultBox(distance, duration, kWhPerKm, startTime)
+      } catch (e) {
+        console.error(e)
+      }
       // showFixedDistanceGraph(distance, kWhPerKm, startTime)
       // showFixedTimeGraph(distance, duration, kWhPerKm, startTime)
       return false
@@ -184,9 +186,9 @@
   <form>
     <span>
       <label for="startTimeHours">starttijd</label>
-      <input type="number" id="startTimeHours" value="6" inputmode="decimal" pattern="[0-9]*" novalidate readonly>
+      <input type="number" id="startTimeHours" value="6" inputmode="decimal" pattern="[0-9]*" novalidate>
       :
-      <input type="number" id="startTimeMinutes" value="00" inputmode="decimal" pattern="[0-9]*" novalidate readonly>
+      <input type="number" id="startTimeMinutes" value="00" inputmode="decimal" pattern="[0-9]*" novalidate>
     </span> 
     <span>  
       <label for="distance">afstand</label>

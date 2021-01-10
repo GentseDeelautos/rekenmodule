@@ -1,29 +1,67 @@
+const Partago = (() => {
+  const { DateTime, Interval, Settings, Duration } = luxon
 
+  const calculateTimeCredits = ({ offsetMinutes, durationMinutes, freeTimeMinutes }) => {
+    // TODO: for now, we base startTime on current time and offsetMinutes.
+    //       Ideally, startTime is set directly by the end user.
+    const startTime = DateTime.local().startOf('day').plus({ minutes: offsetMinutes})
+    const endTime = startTime.plus({ minutes: durationMinutes })
+    const getStartOfDayCredits = time => Math.floor(Math.max(
+      0,
+      Interval.fromDateTimes(
+        time.startOf('day').set({ hours: freeTimeMinutes / 60 }),
+        time
+      ).length('minutes'))
+    )
+    const numFullDays = Math.floor(
+      Interval.fromDateTimes(startTime.startOf('day'), endTime).length('days'))
+    const fullDaysCredits = numFullDays * (24 * 60 - freeTimeMinutes)
+    console.log(getStartOfDayCredits(startTime))
 
-const Partago = {
-  nonCoop: {
-    variables: {
-      freeTimeRange: ['0:00', '6:00'],
-      startCostCredits: 30,
-      creditsPerKwh: 15
-    },
-    getKeyValues: ({ startTime, timeRange, distanceRange, variables }) => {
-      const { startCostCredits, euroPerCredit, kWhPerKm, creditsPerKwh } = variables
-      return [].concat(timeRange).reduce((acc, time) => [
-        ...acc, 
-        ...[].concat(distanceRange).reduce((acc, dist) => [
-          ...acc,
-          [
-            time + startTime, 
-            dist, 
-            (startCostCredits + dist * kWhPerKm * creditsPerKwh + time / 60 / 1000) * euroPerCredit
-          ]
-        ],  [])
-      ], [])
+    return fullDaysCredits + getStartOfDayCredits(endTime) - getStartOfDayCredits(startTime)
+  }
+
+  const calculateDistanceCredits = ({ distance, kWhPerKm, creditsPerKwh }) =>
+    distance * kWhPerKm * creditsPerKwh
+
+  const getKeyValues = ({ startTime, timeRange, distanceRange, variables }) => {
+    const { startCostCredits, euroPerCredit, kWhPerKm, creditsPerKwh, freeTimeRange } = variables
+    const [hours, minutes] = freeTimeRange[1].split(':')
+    const freeTimeDuration = Duration.fromObject({
+      hours: parseInt(hours), 
+      minutes: parseInt(minutes) })
+
+    return [].concat(timeRange).reduce((acc, time) => [
+      ...acc, 
+      ...[].concat(distanceRange).reduce((acc, distance) => [
+        ...acc,
+        [
+          time + startTime, 
+          distance, 
+          euroPerCredit * (startCostCredits + 
+            calculateDistanceCredits({ distance, kWhPerKm, creditsPerKwh }) +
+            calculateTimeCredits({ 
+              offsetMinutes: Duration.fromMillis(startTime).as('minutes'),
+              durationMinutes: Duration.fromMillis(time).as('minutes'),
+              freeTimeMinutes: freeTimeDuration.as('minutes')
+            })
+            )
+        ]
+      ],  [])
+    ], [])
+  }
+
+  return {
+    nonCoop: {
+      variables: {
+        freeTimeRange: ['0:00', '6:00'],
+        startCostCredits: 30,
+        creditsPerKwh: 15
+      },
+      getKeyValues
     }
   }
-}
-
+})()
 
 const CambioFormula = '(costPerHour * ((duration - duration % 60) / 60 + 1)) + (distance <= 100 ? to100 * distance : (to100 * 100 + more * (distance - 100)))'
 
@@ -74,8 +112,8 @@ const settings = {
     getKeyValues: ({ startTime, timeRange, distanceRange, variables }) => {
       const { kWhPerKm, euroPerKw } = variables
       return [].concat(timeRange).reduce((acc, time) => (
-        [...acc, ...[].concat(distanceRange).reduce((acc2, dist) => (
-          [...acc2, [time + startTime, dist, Math.round(100 * dist * kWhPerKm * euroPerKw) / 100]]
+        [...acc, ...[].concat(distanceRange).reduce((acc2, distance) => (
+          [...acc2, [time + startTime, distance, Math.round(100 * distance * kWhPerKm * euroPerKw) / 100]]
         ), [])]
       ), [])
     }
