@@ -1,4 +1,4 @@
-import { settings } from '../model.js'
+import { settings } from '../model.mjs'
 
 const expectImageToBeLoaded = (frag, url) => {
   const img = frag.querySelector(`img[src="${url}"]`)

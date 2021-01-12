@@ -2,8 +2,9 @@
   "name": "rekenmodule",
   "version": "1.0.0",
   "description": "aspirant PWA om kosten van Gentse deelauto's in te schatten.",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx jasmine"
   },
   "repository": {
     "type": "git",
@@ -17,7 +18,8 @@
   "homepage": "https://github.com/GentseDeelautos/rekenmodule#readme",
   "dependencies": {},
   "devDependencies": {
-    "fetch": "^1.1.0",
-    "jasmine-core": "^3.6.0"
+    "jasmine-core": "^3.6.0",
+    "luxon": "^1.25.0",
+    "node-fetch": "^2.6.1"
   }
 }

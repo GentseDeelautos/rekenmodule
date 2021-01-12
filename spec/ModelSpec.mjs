@@ -1,4 +1,4 @@
-import { settings, calculate } from '../model.js'
+import { settings, calculate } from '../model.mjs'
 
 describe('Model', () => {
   describe('Partago', () => {
