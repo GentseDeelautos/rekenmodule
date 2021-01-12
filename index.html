@@ -78,7 +78,7 @@
   <div id="fixedTimeGraph"></div>
   <script>
     import('./model.mjs')
-      .then(({ settings, calculateRounded }) => {
+      .then(({ createModel }) => createModel(luxon, math)).then(({ settings, calculateRounded }) => {
         document.getElementById('modal-control').addEventListener(
           'click',
           () => {
