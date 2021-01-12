@@ -1,6 +1,6 @@
 import { createModel } from '../../model.mjs'
 
-export const createTest = luxon => {
+export const createTest = (luxon, math, getPageText) => {
   const { settings } = createModel(luxon, math)
 
   const expectImageToBeLoaded = (frag, url) => {
@@ -23,9 +23,7 @@ export const createTest = luxon => {
       let frag
       let ritPrijzen
       beforeAll(async () => {
-        const response = await fetch('https://www.partago.be/tarieven.html')
-        // console.log(document.createRange().createContextualFragment(await response.text()).textContent)
-        frag = document.createRange().createContextualFragment(await response.text())
+        frag = await getPageText('https://www.partago.be/tarieven.html')
         const [_, ...rest] = frag.textContent.split('Ritprijs')
         ritPrijzen = rest
       })
@@ -118,10 +116,8 @@ export const createTest = luxon => {
     })
     describe('GreenMobility', () => {
       let frag
-      beforeAll(async () => {
-        const response = await fetch('https://www.greenmobility.com/be/nl/prijzen/')
-        frag = document.createRange().createContextualFragment(await response.text())
-      })
+      beforeAll(async () =>
+        frag = await getPageText('https://www.greenmobility.com/be/nl/prijzen/'))
       describe('prePaid', () => {
         let textBlocks
         let text
