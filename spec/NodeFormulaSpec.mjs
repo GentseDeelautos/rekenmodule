@@ -1,5 +1,5 @@
 import luxon from 'luxon'
 import { createTest } from './FormulaSpec.mjs'
-import { evaluate } from 'mathjs'
+import math from 'mathjs'
 
-createTest(luxon, { evaluate })
+createTest(luxon, math)
