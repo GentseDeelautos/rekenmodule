@@ -1,5 +1,7 @@
+import { settings } from '../model.js'
+
 const expectImageToBeLoaded = (frag, url) => {
-  const img = this.frag.querySelector(`img[src="${url}"]`)
+  const img = frag.querySelector(`img[src="${url}"]`)
   expect(img).toBeDefined()
 }
 
@@ -15,15 +17,19 @@ const expectImageToMatch = async (refLocator, url) => {
 
 describe('Formulas', () => {
   describe('Partago', () => {
+    let frag
+    let ritPrijzen
     beforeAll(async () => {
       const response = await fetch('https://www.partago.be/tarieven.html')
-      this.frag = document.createRange().createContextualFragment(await response.text())
-      const [_, ...ritPrijzen] = this.frag.textContent.split('Ritprijs')
-      Object.assign(this, { ritPrijzen })
+      // console.log(document.createRange().createContextualFragment(await response.text()).textContent)
+      frag = document.createRange().createContextualFragment(await response.text())
+      const [_, ...rest] = frag.textContent.split('Ritprijs')
+      ritPrijzen = rest
     })
     describe('abonnement en bundel', () => {
+      let text
       beforeAll(() => {
-        this.text = this.frag.textContent
+        text = frag.textContent
           .split('Stap 2 Koop jouw bundel of activeer een abonnement')[1]
           .split('Stap 3 Om het leven gemakkelijker te maken')[0]
       })
@@ -31,9 +37,9 @@ describe('Formulas', () => {
         const { freeTimeRange, startCostCredits, creditsPerKwh } = settings['Partago kleine bundel'].variables
         const planIndex = 0
         it('matches opstartcredits', () =>
-          expect(this.text).toContain(` ${startCostCredits} credits bij reserveren`))
+          expect(text).toContain(` ${startCostCredits} credits bij reserveren`))
         it('matches credits per kWh', () =>
-          expect(this.text).toContain(` ${creditsPerKwh} credits per verbruikte kWh`))
+          expect(text).toContain(` ${creditsPerKwh} credits per verbruikte kWh`))
         it('still has price as of 01/01/2021', async () => {
           const url = '/uploads/7/3/7/4/73741293/kb-plain-final-100dpi_8_orig.png'
           expectImageToBeLoaded(frag, url)
@@ -41,7 +47,7 @@ describe('Formulas', () => {
           const refImg = document.querySelector('#partagoKleineBundel')
         })
         it('still has the same free time range as of 01/01/2021', () =>
-          expect(this.ritPrijzen[planIndex]).toContain(`gratis tussen ${freeTimeRange[0]} en ${freeTimeRange[1]}`))
+          expect(ritPrijzen[planIndex]).toContain(`gratis tussen ${freeTimeRange[0]} en ${freeTimeRange[1]}`))
         
         // next tests are important because of the calculation algorithm depends on it
         it('has a free range starting from midnight', () => expect(freeTimeRange[0]).toEqual('0:00'))
@@ -54,53 +60,53 @@ describe('Formulas', () => {
         const { freeTimeRange, startCostCredits, creditsPerKwh } = settings['Partago grote bundel'].variables
         const planIndex = 1
         it('matches opstartcredits', () =>
-          expect(this.text).toContain(` ${startCostCredits} credits bij reserveren`))
+          expect(text).toContain(` ${startCostCredits} credits bij reserveren`))
         it('matches credits per kWh', () =>
-          expect(this.text).toContain(` ${creditsPerKwh} credits per verbruikte kWh`))
+          expect(text).toContain(` ${creditsPerKwh} credits per verbruikte kWh`))
         it('still has price as of 01/01/2010', async () => {
           const url = '/uploads/7/3/7/4/73741293/gb-simpel_2_orig.png'
-          expectImageToBeLoaded(this.frag, url)
+          expectImageToBeLoaded(frag, url)
           await expectImageToMatch('#partagoGroteBundel', url)
         })
         it('still has the same free time range as of 01/01/2021', () =>
-          expect(this.ritPrijzen[planIndex]).toContain(`gratis tussen ${freeTimeRange[0]} en ${freeTimeRange[1]}`))
+          expect(ritPrijzen[planIndex]).toContain(`gratis tussen ${freeTimeRange[0]} en ${freeTimeRange[1]}`))
       })
       describe('klein abonnement', () => {
         const { freeTimeRange, startCostCredits, creditsPerKwh } = settings['Partago klein abonnement'].variables
         const planIndex = 2
         it('matches opstartcredits', () =>
-          expect(this.text).toContain(` ${startCostCredits} credits bij reserveren`))
+          expect(text).toContain(` ${startCostCredits} credits bij reserveren`))
         it('matches credits per kWh', () =>
-          expect(this.text).toContain(` ${creditsPerKwh} credits per verbruikte kWh`))
+          expect(text).toContain(` ${creditsPerKwh} credits per verbruikte kWh`))
         it('still has price as of 01/01/2021', async () => {
           const url = '/uploads/7/3/7/4/73741293/ka-simpel_2_orig.png'
           expectImageToBeLoaded(frag, url)
           await expectImageToMatch('#partagoKleinAbonnement', url)
         })
         it('still has the same free time range as of 01/01/2021', () =>
-        expect(this.ritPrijzen[planIndex]).toContain(`gratis tussen ${freeTimeRange[0]} en ${freeTimeRange[1]}`))
+        expect(ritPrijzen[planIndex]).toContain(`gratis tussen ${freeTimeRange[0]} en ${freeTimeRange[1]}`))
       })
       describe('groot abonnement', () => {
         const { freeTimeRange, startCostCredits, creditsPerKwh } = settings['Partago groot abonnement'].variables
         const planIndex = 3
         it('matches opstartcredits', () =>
-          expect(this.text).toContain(` ${startCostCredits} credits bij reserveren`))
+          expect(text).toContain(` ${startCostCredits} credits bij reserveren`))
         it('matches credits per kWh', () =>
-          expect(this.text).toContain(` ${creditsPerKwh} credits per verbruikte kWh`))
+          expect(text).toContain(` ${creditsPerKwh} credits per verbruikte kWh`))
         it('still has price as of 01/01/2021', async () => {
           const url = '/uploads/7/3/7/4/73741293/ga-simpel_2_orig.png'
           expectImageToBeLoaded(frag, url)
           await expectImageToMatch('#partagoGrootAbonnement', url)
         })
         it('still has the same free time range as of 01/01/2021', () =>
-        expect(this.ritPrijzen[planIndex]).toContain(`gratis tussen ${freeTimeRange[0]} en ${freeTimeRange[1]}`))
+        expect(ritPrijzen[planIndex]).toContain(`gratis tussen ${freeTimeRange[0]} en ${freeTimeRange[1]}`))
       })
     })
     describe('coop formule', () => {
       const { euroPerKw } = settings['Partago coop'].variables
       const planIndex = 4
       it('still has price of 01/01/2021', () => {
-        const text = this.frag.textContent
+        const text = frag.textContent
           .split('Bye bye tijdstress?')[1]
           .split('Elke maand betaal je de gemaakte ritten met domiciliëring')[0]
         expect(text).toContain(`${euroPerKw.toLocaleString('nl-BE')}0 euro per kWh.`)
@@ -108,20 +114,23 @@ describe('Formulas', () => {
     })
   })
   describe('GreenMobility', () => {
+    let frag
     beforeAll(async () => {
       const response = await fetch('https://www.greenmobility.com/be/nl/prijzen/')
-      this.frag = document.createRange().createContextualFragment(await response.text())
+      frag = document.createRange().createContextualFragment(await response.text())
     })
     describe('prePaid', () => {
+      let textBlocks
+      let text
       beforeAll(() => {
-        this.text = this.frag.textContent
+        text = frag.textContent
             .split('Prepaid minuten')[1]
             .split('Uur-en dagpakketten')[0]
-        this.textBlocks = this.text.split('Kies in de app')
+        textBlocks = text.split('Kies in de app')
       })
       const expectCorrectFormulaValuesFor = (index, name) => {
         const { price, timeMin } = settings[`GreenMobility prepaid ${name}`].variables
-        expect(this.textBlocks[index]).toMatch(new RegExp(`${price} Euro\\s*${timeMin}min`))
+        expect(textBlocks[index]).toMatch(new RegExp(`${price} Euro\\s*${timeMin}min`))
       }
       describe('25 euro', () => 
         it('still has the value of 01/01/2021', () => expectCorrectFormulaValuesFor(0, '25 euro')))
@@ -131,22 +140,24 @@ describe('Formulas', () => {
         it('still has the value of 01/01/2021', () => expectCorrectFormulaValuesFor(2, '150 euro')))
     })
     describe('uur- en dagpakketten', () => {
+      let textBlocks
+      let text
       beforeAll(() => {
-        this.text = this.frag.textContent.split('Uur-en dagpakketten')[1]
-        this.textBlocks = this.text.split('Kies in de app')})
+        text = frag.textContent.split('Uur-en dagpakketten')[1]
+        textBlocks = text.split('Kies in de app')})
       const { variables: { overDistancePerKm, overTimeCost } } = settings['GreenMobility 3 uur pakket']
       describe('over distance', () =>
         it('still costs the same as of 01/01/2021', 
-          () => expect(this.text).toContain(`Als je meer rijdt dan de kilometers in jouw pakket, zal elke kilometer daarna € ${overDistancePerKm.toLocaleString('nl-BE')}/km kosten`)))
+          () => expect(text).toContain(`Als je meer rijdt dan de kilometers in jouw pakket, zal elke kilometer daarna € ${overDistancePerKm.toLocaleString('nl-BE')}/km kosten`)))
       describe('over time', () =>
         it('still costs the same as of 01/01/2021', 
-          () => expect(this.text).toContain(`Anders rijd je verder aan € ${overTimeCost.toLocaleString('nl-BE')}/minuut.`)))
+          () => expect(text).toContain(`Anders rijd je verder aan € ${overTimeCost.toLocaleString('nl-BE')}/minuut.`)))
       const expectCorrectValuesFor = (index, values, unitNl) => {
         const [[unitEn, value]] = Object.entries(values)
         const { variables: { price, maxDistance, maxTime } } = settings[`GreenMobility ${value} ${unitNl} pakket`]
         const duration = luxon.Duration.fromObject({ minutes: maxTime, locale: 'nl-BE' })
         const period = `${duration.as(unitEn)}${unitNl}`
-        expect(this.textBlocks[index]).toMatch(new RegExp(`${price} Euro\\s*${period}[\\s\\S]*incl. ${maxDistance} km`))
+        expect(textBlocks[index]).toMatch(new RegExp(`${price} Euro\\s*${period}[\\s\\S]*incl. ${maxDistance} km`))
       }  
       describe('3 uur', () => it('still means the same as of 01/01/2021', () => expectCorrectValuesFor(0, { hours: 3 },'uur')))
       describe('5 uur', () => it('still means the same as of 01/01/2021', () => expectCorrectValuesFor(1, { hours: 5 }, 'uur')))

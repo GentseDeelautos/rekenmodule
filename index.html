@@ -29,7 +29,7 @@
       const kWhPerKm = parseInt(document.getElementById('kWhPer100Km').value)/100
       const startTimeMinutes = parseInt(document.getElementById('startTimeMinutes').value)
       const startTimeHours = parseInt(document.getElementById('startTimeHours').value)
-      const startTime = DateTime.local().setLocale('Europe/Brussels')
+      const startTime = luxon.DateTime.local().setLocale('Europe/Brussels')
         .set({ hours: startTimeHours, minutes: startTimeMinutes })
       showResultBox(distance, duration, kWhPerKm, startTime)
       } catch (e) {
@@ -137,7 +137,7 @@
       const distance = (document.cookie.match(/distance=(\d*)/) || [])[1]
       const duration = (document.cookie.match(/duration=(\d*)/) || [])[1]
       const kWhPer100Km = (document.cookie.match(/kWhPer100Km=(\d*)/) || [])[1] 
-      const startOffset = Duration.fromObject({ hours: 6, minutes: 0 }) 
+      const startOffset = luxon.Duration.fromObject({ hours: 6, minutes: 0 }) 
       if (distance) document.getElementById('distance').value = distance
       if (duration) document.getElementById('duration').value = duration
       if (kWhPer100Km) document.getElementById('kWhPer100Km').value = kWhPer100Km

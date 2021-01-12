@@ -77,7 +77,7 @@ const GreenMobilityExcessionCost = {
   overTimeCost: 0.25
 }
 
-const settings = {
+export const settings = {
   'Partago grote bundel': {
     variables: {
       ...Partago.nonCoop.variables,
@@ -195,13 +195,13 @@ const settings = {
   'GreenMobility 7 dagen pakket': { variables: { ...GreenMobilityExcessionCost, price: 350, maxTime: 7 * 24 * 60 , maxDistance: 1000 }, formula: GreenMobilityPakketFormula },
 }
 
-function calculate ({ name, distance, duration, kWhPerKm, startTime }) {
+export function calculate ({ name, distance, duration, kWhPerKm, startTime }) {
   const { formula, variables, getKeyValues } = settings[name] || {}
   if (getKeyValues) 
     return getKeyValues({ startTime, timeRangeMs: duration * 60 * 1000, distanceRange: distance, variables: { ...variables, kWhPerKm } })[0][2]
   return math.evaluate(formula, { ...variables, kWhPerKm, distance, duration })
 }
 
-function calculateRounded (options) {
+export function calculateRounded (options) {
   return Math.round(calculate(options) * 100) / 100
 }

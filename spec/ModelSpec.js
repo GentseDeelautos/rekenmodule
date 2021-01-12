@@ -1,3 +1,5 @@
+import { settings, calculate } from '../model.js'
+
 describe('Model', () => {
   describe('Partago', () => {
     const startupCredits = 30
