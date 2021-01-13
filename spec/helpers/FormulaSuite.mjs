@@ -3,11 +3,6 @@ import { createModel } from '../../model.mjs'
 export const createTest = (luxon, math, getPageText) => {
   const { settings } = createModel(luxon, math)
 
-  // const expectImageToBeLoaded = (frag, url) => {
-  //   const img = frag.querySelector(`img[src="${url}"]`)
-  //   expect(img).toBeDefined()
-  // }
-
   describe('Formulas', () => {
     describe('Partago', () => {
       let frag
@@ -25,7 +20,8 @@ export const createTest = (luxon, math, getPageText) => {
             .split('Stap 3 Om het leven gemakkelijker te maken')[0]
         })
         describe('kleine bundel', () => {
-          const { freeTimeRange, startCostCredits, creditsPerKwh } = settings['Partago kleine bundel'].variables
+          const { freeTimeRange, startCostCredits, creditsPerKwh, euroPerCredit } =
+            settings['Partago kleine bundel'].variables
           const planIndex = 0
           it('matches opstartcredits', () =>
             expect(text).toContain(` ${startCostCredits} credits bij reserveren`))
@@ -33,6 +29,10 @@ export const createTest = (luxon, math, getPageText) => {
             expect(text).toContain(` ${creditsPerKwh} credits per verbruikte kWh`))
           it('still has the same free time range as of 01/01/2021', () =>
             expect(ritPrijzen[planIndex]).toContain(`gratis tussen ${freeTimeRange[0]} en ${freeTimeRange[1]}`))
+          it('still has price as of 01/01/2010', async () => {
+            expect(ritPrijzen[planIndex])
+              .toContain(`${(Math.round(euroPerCredit*10000) /100 ).toLocaleString('nl-BE')} cent per minuut`)
+          })
           
           // next tests are important because of the calculation algorithm depends on it
           it('has a free range starting from midnight', () => expect(freeTimeRange[0]).toEqual('0:00'))
@@ -42,47 +42,47 @@ export const createTest = (luxon, math, getPageText) => {
           })
         })
         describe('grote bundel', () => {
-          const { freeTimeRange, startCostCredits, creditsPerKwh } = settings['Partago grote bundel'].variables
+          const { freeTimeRange, startCostCredits, creditsPerKwh, euroPerCredit } =
+            settings['Partago grote bundel'].variables
           const planIndex = 1
           it('matches opstartcredits', () =>
             expect(text).toContain(` ${startCostCredits} credits bij reserveren`))
           it('matches credits per kWh', () =>
             expect(text).toContain(` ${creditsPerKwh} credits per verbruikte kWh`))
-          // it('still has price as of 01/01/2010', async () => {
-          //   const url = '/uploads/7/3/7/4/73741293/gb-simpel_2_orig.png'
-          //   expectImageToBeLoaded(frag, url)
-          //   await expectImageToMatch('#partagoGroteBundel', url)
-          // })
+          it('still has price as of 01/01/2010', async () => {
+              expect(ritPrijzen[planIndex])
+                .toContain(`${(Math.round(euroPerCredit*10000) /100 ).toLocaleString('nl-BE')} cent per minuut`)
+          })
           it('still has the same free time range as of 01/01/2021', () =>
             expect(ritPrijzen[planIndex]).toContain(`gratis tussen ${freeTimeRange[0]} en ${freeTimeRange[1]}`))
         })
         describe('klein abonnement', () => {
-          const { freeTimeRange, startCostCredits, creditsPerKwh } = settings['Partago klein abonnement'].variables
+          const { freeTimeRange, startCostCredits, creditsPerKwh, euroPerCredit } =
+            settings['Partago klein abonnement'].variables
           const planIndex = 2
           it('matches opstartcredits', () =>
             expect(text).toContain(` ${startCostCredits} credits bij reserveren`))
           it('matches credits per kWh', () =>
             expect(text).toContain(` ${creditsPerKwh} credits per verbruikte kWh`))
-          // it('still has price as of 01/01/2021', async () => {
-          //   const url = '/uploads/7/3/7/4/73741293/ka-simpel_2_orig.png'
-          //   expectImageToBeLoaded(frag, url)
-          //   await expectImageToMatch('#partagoKleinAbonnement', url)
-          // })
+          it('still has price as of 01/01/2010', async () => {
+            expect(ritPrijzen[planIndex])
+              .toContain(`${(Math.round(euroPerCredit*10000) /100 ).toLocaleString('nl-BE')} cent per minuut`)
+          })
           it('still has the same free time range as of 01/01/2021', () =>
           expect(ritPrijzen[planIndex]).toContain(`gratis tussen ${freeTimeRange[0]} en ${freeTimeRange[1]}`))
         })
         describe('groot abonnement', () => {
-          const { freeTimeRange, startCostCredits, creditsPerKwh } = settings['Partago groot abonnement'].variables
+          const { freeTimeRange, startCostCredits, creditsPerKwh, euroPerCredit } =
+            settings['Partago groot abonnement'].variables
           const planIndex = 3
           it('matches opstartcredits', () =>
             expect(text).toContain(` ${startCostCredits} credits bij reserveren`))
           it('matches credits per kWh', () =>
             expect(text).toContain(` ${creditsPerKwh} credits per verbruikte kWh`))
-          // it('still has price as of 01/01/2021', async () => {
-          //   const url = '/uploads/7/3/7/4/73741293/ga-simpel_2_orig.png'
-          //   expectImageToBeLoaded(frag, url)
-          //   await expectImageToMatch('#partagoGrootAbonnement', url)
-          // })
+          it('still has price as of 01/01/2010', async () => {
+            expect(ritPrijzen[planIndex])
+              .toContain(`${(Math.round(euroPerCredit*10000) /100 ).toLocaleString('nl-BE')},00 cent per minuut`)
+          })
           it('still has the same free time range as of 01/01/2021', () =>
           expect(ritPrijzen[planIndex]).toContain(`gratis tussen ${freeTimeRange[0]} en ${freeTimeRange[1]}`))
         })
