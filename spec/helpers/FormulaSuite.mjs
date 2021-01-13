@@ -151,5 +151,22 @@ export const createTest = (luxon, math, getPageText) => {
         describe('7 dagen', () => it('still means the same as of 01/01/2021', () => expectCorrectValuesFor(6, { days: 7 }, 'dagen')))
       })
     })
+    describe('Degage', () => {
+      let frag
+      const { to100, to200, more } = settings['D&eacute;gage'].variables
+
+      beforeAll(async () => {
+        frag = await getPageText('https://www.degage.be/de-prijzen/')
+      })
+      describe('beneden 100 km', () =>
+        it('still has price of 01/01/2021', () =>
+          expect(frag.textContent).toContain(`0-100 km€ ${to100.toLocaleString('nl-BE')}`)))
+      describe('tussen 100 en 200 km', () =>
+        it('still has price of 01/01/2021', () =>
+          expect(frag.textContent).toContain(`100-200 km€ ${to200.toLocaleString('nl-BE')}`)))
+      describe('boven 1200 km', () =>
+        it('still has price of 01/01/2021', () =>
+          expect(frag.textContent).toContain(`vanaf 201 km€ ${more.toLocaleString('nl-BE')}`)))
+    })
   })
 }
