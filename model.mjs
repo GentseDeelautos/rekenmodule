@@ -130,9 +130,9 @@ export const createModel = (luxon, math) => {
     },
     'Cambio Start': {
       variables: {
-        to100: 0.35,  // prijs per distance tem 100km
+        to100: 0.34,  // prijs per distance tem 100km
         more: 0.23, // prijs per distance vanaf 100km
-        costPerHour: 1.75
+        costPerHour: 2
       },
       formula: CambioFormula
     },

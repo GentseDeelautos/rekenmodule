@@ -168,5 +168,36 @@ export const createTest = (luxon, math, getPageText) => {
         it('still has price of 01/01/2021', () =>
           expect(frag.textContent).toContain(`vanaf 201 km€ ${more.toLocaleString('nl-BE')}`)))
     })
+    describe('Cambio', () =>  {
+      const parts = {}
+      beforeAll(async () => {
+        const text = (await getPageText('https://www.cambio.be/nl-vla/hoeveel-kost-het'))
+          .textContent
+        const [comfortAndMore] = text.split('FINANCIERINGSBIJDRAGE')
+        const [bonusAndMore, comfort] = text.split('COMFORT')
+        const [startAndMore, bonus] = text.split('BONUS')
+        const start = text.split('START').pop()
+        Object.assign(parts, { start, bonus, comfort })
+      })
+      describe('Start', () => {
+        const {variables: { to100, more, costPerHour } } =
+          settings['Cambio Start']
+        // TODO: isoleer wagentypes 
+        describe('uurprijs', () => 
+          it('is nog steeds hetzelfde als 01/01/2021', () =>
+            expect(parts.start).toMatch(new RegExp(
+              `Uurprijs\\s\\(van 7u - 23u\\)\\n\\s*€\\s${costPerHour}\\n`))))
+        describe('kilometerprijs', () => {
+          describe('minder dan 100 km', () => 
+            it('is nog steeds hetzelfde als 01/01/2021', () =>
+              expect(parts.start).toMatch(new RegExp(
+                `Kilometerprijs\\s\\<\\s100km\\n\\s*€\\s${to100.toLocaleString('nl-BE')}\\n`))))
+          describe('meer dan 100 km', () => 
+            it('is nog steeds hetzelfde als 01/01/2021', () =>
+              expect(parts.start).toMatch(new RegExp(
+                `Kilometerprijs\\s\\>\\s100km\\n\\s*€\\s${more.toLocaleString('nl-BE')}\\n`))))
+        })
+      })
+    })
   })
 }
