@@ -28,7 +28,12 @@ export const createModel = (luxon, math) => {
 
     const getKeyValues = ({ startTime, timeRangeMs, distanceRange, variables }) => {
       const { startCostCredits, euroPerCredit, kWhPerKm, creditsPerKwh, freeTimeRange } = variables
-      const [hours, minutes] = freeTimeRange[1].split(':')
+      // TODO: this should only be happening once
+      const freeTimeRangeObjects = freeTimeRange.map(token => {
+        const [hours, minutes] = token.split(':')
+        return { hours, minutes, seconds: 0, milliseconds: 0 }
+      })
+      const { hours, minutes } = freeTimeRangeObjects[1]
       const freeTime = Duration.fromObject({
         hours: parseInt(hours), 
         minutes: parseInt(minutes) })
