@@ -2,7 +2,11 @@ export const createModel = (luxon, math) => {
   const { DateTime, Interval, Duration } = luxon
 
   const Partago = (() => {
-    const calculateTimeCredits = ({ startTime, duration, freeTime}) => {
+    const calculateTimeCredits = ({ startTime, duration, freeTimeRange }) => {
+      const { hours, minutes } = freeTimeRange[1]
+      const freeTime = Duration.fromObject({
+        hours: parseInt(hours), 
+        minutes: parseInt(minutes) })
       const endTime = startTime.plus(duration)
 
       const getStartOfDayCredits = until => {
@@ -33,10 +37,6 @@ export const createModel = (luxon, math) => {
         const [hours, minutes] = token.split(':')
         return { hours, minutes, seconds: 0, milliseconds: 0 }
       })
-      const { hours, minutes } = freeTimeRangeObjects[1]
-      const freeTime = Duration.fromObject({
-        hours: parseInt(hours), 
-        minutes: parseInt(minutes) })
 
       return [].concat(timeRangeMs).reduce((acc, milliSeconds) => [
         ...acc, 
@@ -50,9 +50,9 @@ export const createModel = (luxon, math) => {
               calculateTimeCredits({ 
                 startTime,
                 duration: Duration.fromObject({ milliSeconds }),
-                freeTime
+                freeTimeRange: freeTimeRangeObjects 
               })
-              )
+            )
           ]
         ],  [])
       ], [])
