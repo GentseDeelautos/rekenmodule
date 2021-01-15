@@ -35,8 +35,6 @@
     src="https://cdn.jsdelivr.net/npm/luxon@1.25.0/build/global/luxon.min.js" 
     integrity="sha256-OVk2fwTRcXYlVFxr/ECXsakqelJbOg5WCj1dXSIb+nU=" crossorigin="anonymous">
   </script>
-  <!-- include spec files here... -->
-  <!-- <script src="spec/FormulaSpec.mjs" type="module"></script> -->
   <style>
     #partagoGroteBundel, #partagoKleineBundel, #partagoKleinAbonnement, #partagoGrootAbonnement { width: 30px; }
   </style>
@@ -46,7 +44,9 @@
   <script>
     const getPageText = async (href) => {
       const response = await fetch(href)
-      return document.createRange().createContextualFragment(await response.text())
+      const domParser = new DOMParser()
+      const result = domParser.parseFromString(await response.text(), 'text/html')
+      return result.querySelector('html')
     }
     import('./spec/helpers/ModelSuite.mjs')
       .then(({ createTest }) => createTest(luxon, math))
