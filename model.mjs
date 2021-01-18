@@ -1,28 +1,53 @@
+import { DateTime } from "luxon"
+
+const zone = 'Europe/Brussels'
+
+const getNextIntervalEndMs = ({ startMs, endMs, freeRange }) => {
+  const freeRangeDateTimes = freeRange
+  .map(obj => DateTime.fromMillis(startMs, { zone }).set(obj))
+  const freeRangeMs = 
+    [...freeRangeDateTimes, ...freeRangeDateTimes.map(t => t.plus({ days: 1 }))]
+      .map(dateTime => dateTime.valueOf())
+  const sorted = [...new Set([startMs, endMs, ...freeRangeMs].sort())]
+  const startIndex = sorted.indexOf(startMs)
+  return sorted[startIndex + 1]
+}
+
 export const createModel = (luxon, math) => {
   const { DateTime, Interval, Duration } = luxon
 
   const Partago = (() => {
     const calculateTimeCredits = ({ startTime, duration, freeTimeRange }) => {
-      const { hours, minutes } = freeTimeRange[1]
-      const freeTime = Duration.fromObject({
-        hours: parseInt(hours), 
-        minutes: parseInt(minutes) })
-      const endTime = startTime.plus(duration)
+      const startMs = startTime.valueOf()
+      const endMs = startTime.plus(duration).valueOf()
+      
+      const freeRangeMs = freeTimeRange.map(obj => startTime.set(obj).valueOf())
+      const isReverseRange = freeRangeMs[0] > freeRangeMs[1]
 
-      const getStartOfDayCredits = until => {
-        const from = until.startOf('day').set({ hours: freeTime.hours })
+      // not reversed: 
+      // 6:00 x 0:00 => x in interval
+      // 6:00 x => x = startTime => x in interval
+      // x 0:00 => x = endTime => x not interval
+      // reverse range:
+      // 23:00 x 6:00 => x not in interval
+      // 23:00 x => x = endTime =>  not in interval
+      // x 6:00 => x= startTime => in interval
 
-        if (from > until) return 0
-        return Interval.fromDateTimes(from, until).length('minutes')
-      }
+      const sorted = [...new Set([...freeRangeMs, startMs].sort().reverse())]
 
-      const numFullDays = Math.floor(
-        Interval.fromDateTimes(startTime.startOf('day'), endTime).length('days'))
-      const fullDaysCredits = numFullDays * (24 * 60 - freeTime.as('minutes'))
-      const offsetCredits = getStartOfDayCredits(startTime)
-      const trailingCredits = getStartOfDayCredits(endTime)
+      let costMs = 0
+      let startsInFreeInterval = (sorted[1] === startMs) !== isReverseRange
 
-      return fullDaysCredits + trailingCredits - offsetCredits
+      
+      let tmpMs = startMs
+      while (tmpMs < endMs) {
+        const tmpEndMs = getNextIntervalEndMs({ startMs: tmpMs, endMs, freeRange: freeTimeRange } )
+        if (!startsInFreeInterval) costMs += (tmpEndMs - tmpMs)
+        startsInFreeInterval = !startsInFreeInterval
+        tmpMs = tmpEndMs
+      }  
+
+      return costMs / (60 * 1000)
     }
 
     const calculateDistanceCredits = ({ distance, kWhPerKm, creditsPerKwh }) =>
@@ -34,8 +59,8 @@ export const createModel = (luxon, math) => {
       const { startCostCredits, euroPerCredit, kWhPerKm, creditsPerKwh, freeTimeRange } = variables
       // TODO: this should only be happening once
       const freeTimeRangeObjects = freeTimeRange.map(token => {
-        const [hours, minutes] = token.split(':')
-        return { hours, minutes, seconds: 0, milliseconds: 0 }
+        const [hour, minute] = token.split(':')
+        return { hour, minute, second: 0, millisecond: 0 }
       })
 
       return [].concat(timeRangeMs).reduce((acc, milliSeconds) => [

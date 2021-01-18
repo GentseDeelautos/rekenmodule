@@ -33,10 +33,7 @@ export const createTest = (luxon, math, getPageText) => {
             expect(ritPrijzen[planIndex])
               .toContain(`${(Math.round(euroPerCredit*10000) /100 ).toLocaleString('nl-BE')} cent per minuut`)
           })
-          
-          // next tests are important because of the calculation algorithm depends on it
-          it('has a free range starting from midnight', () => expect(freeTimeRange[0]).toEqual('0:00'))
-          it('DST changes happen inside free range', () =>{
+          it('considers DST changes', () =>{
             const beforeDST = luxon.DateTime.fromISO('2021-03-28T00:00:00', { zone: 'Europe/Brussels'})
             expect(beforeDST.plus({ hours: freeTimeRange[1].split(':')[0] }).hour).toEqual(7)
           })
