@@ -1,8 +1,8 @@
-import { createModel } from '../../model.mjs'
+import { createModel } from '../../model.1.mjs'
 
 export const createTest = (luxon, math) => {
   const { settings, calculate } = createModel(luxon, math)
-  
+
   describe('Model', () => {
     describe('Partago', () => {
       const startupCredits = 30
