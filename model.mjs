@@ -1,20 +1,18 @@
-import { DateTime } from "luxon"
-
-const zone = 'Europe/Brussels'
-
-const getNextIntervalEndMs = ({ startMs, endMs, freeRange }) => {
-  const freeRangeDateTimes = freeRange
-  .map(obj => DateTime.fromMillis(startMs, { zone }).set(obj))
-  const freeRangeMs = 
-    [...freeRangeDateTimes, ...freeRangeDateTimes.map(t => t.plus({ days: 1 }))]
-      .map(dateTime => dateTime.valueOf())
-  const sorted = [...new Set([startMs, endMs, ...freeRangeMs].sort())]
-  const startIndex = sorted.indexOf(startMs)
-  return sorted[startIndex + 1]
-}
-
 export const createModel = (luxon, math) => {
   const { DateTime, Interval, Duration } = luxon
+
+  const zone = 'Europe/Brussels'
+
+  const getNextIntervalEndMs = ({ startMs, endMs, freeRange }) => {
+    const freeRangeDateTimes = freeRange
+    .map(obj => DateTime.fromMillis(startMs, { zone }).set(obj))
+    const freeRangeMs = 
+      [...freeRangeDateTimes, ...freeRangeDateTimes.map(t => t.plus({ days: 1 }))]
+        .map(dateTime => dateTime.valueOf())
+    const sorted = [...new Set([startMs, endMs, ...freeRangeMs].sort())]
+    const startIndex = sorted.indexOf(startMs)
+    return sorted[startIndex + 1]
+  }
 
   const Partago = (() => {
     const calculateTimeCredits = ({ startTime, duration, freeTimeRange }) => {
