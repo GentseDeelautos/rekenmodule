@@ -2,6 +2,7 @@ import { createModel } from '../../model.mjs'
 
 export const createTest = (luxon, math) => {
   const { settings, calculate } = createModel(luxon, math)
+  
   describe('Model', () => {
     describe('Partago', () => {
       const startupCredits = 30
