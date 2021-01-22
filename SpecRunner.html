@@ -38,17 +38,19 @@
 </head>
 
 <body>
-  <script>
+  <script type="module">
+    import { createTest as createModelTest } from './spec/helpers/ModelSuite.1.mjs'
+    import { createTest as createFormulaTest } from './spec/helpers/FormulaSuite.1.mjs'
+    
     const getPageText = async (href) => {
       const response = await fetch(href)
       const domParser = new DOMParser()
       const result = domParser.parseFromString(await response.text(), 'text/html')
       return result.querySelector('html')
     }
-    import('./spec/helpers/ModelSuite.mjs')
-      .then(({ createTest }) => createTest(luxon, math))
-    import('./spec/helpers/FormulaSuite.mjs')
-      .then(({ createTest }) => createTest(luxon, math, getPageText))
+    
+    createModelTest(luxon, math)
+    createFormulaTest(luxon, math, getPageText)
   </script>
   </body>
 </html>
