@@ -1,4 +1,4 @@
-import { createModel } from './model.1.mjs'
+import { createModel } from './models/costCalulation.1.mjs'
 
 const { settings, calculateRounded } = createModel(luxon, math)
 

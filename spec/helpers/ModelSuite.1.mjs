@@ -1,4 +1,4 @@
-import { createModel } from '../../src/model.1.mjs'
+import { createModel } from '../../src/models/costCalulation.1.mjs'
 
 export const createTest = (luxon, math) => {
   const { settings, calculate } = createModel(luxon, math)
