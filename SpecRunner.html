@@ -39,8 +39,8 @@
 
 <body>
   <script type="module">
-    import { createTest as createModelTest } from './spec/helpers/ModelSuite.1.mjs'
-    import { createTest as createFormulaTest } from './spec/helpers/FormulaSuite.1.mjs'
+    import * as CalculationSuite from './spec/helpers/CalculationSuite.1.mjs'
+    import * as FormulaSuite from './spec/helpers/FormulaSuite.1.mjs'
     
     const getPageText = async (href) => {
       const response = await fetch(href)
@@ -49,8 +49,8 @@
       return result.querySelector('html')
     }
     
-    createModelTest(luxon, math)
-    createFormulaTest(luxon, math, getPageText)
+    CalculationSuite.createTest(luxon, math)
+    FormulaSuite.createTest(luxon, math, getPageText)
   </script>
   </body>
 </html>
