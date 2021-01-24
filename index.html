@@ -59,7 +59,13 @@
 </head>
 <html>
   <div data-controller="start-message">
-    <input type="checkbox" id="modal-control" class="modal" data-action="change->start-message#close" >
+    <input
+      type="checkbox"
+      id="modal-control"
+      class="modal"
+      data-action="change->start-message#close"
+      data-start-message-target="modalVisibilityCheckBox"
+    >
     <div>
       <div class="card">
         <p class="section">
