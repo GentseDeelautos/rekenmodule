@@ -12,12 +12,12 @@
    integrity="sha256-jnrFf6CiZ2veyKUaL7l7FHWW/ela8txaw/J7SVZzW5o="
    crossorigin="anonymous"></script>
   <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/7.2.0/highcharts.js"
-    integrity="sha256-pWlJ6y5bcww1f1YFl+ak3DjzWUFtLTiy1u1amuLuSfA="
+    src="https://cdn.jsdelivr.net/npm/highcharts@8.2.2/highcharts.min.js"
+    integrity="sha384-MTsiGttq5ajQgpBIfjO442dzYQlI6eQt6Vntn68Zy5LDUAdwD7ShtvpPjGtyCyM4"
     crossorigin="anonymous"></script>
   <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/luxon/1.25.0/luxon.min.js"
-    integrity="sha512-OyrI249ZRX2hY/1CAD+edQR90flhuXqYqjNYFJAiflsKsMxpUYg5kbDDAVA8Vp0HMlPG/aAl1tFASi1h4eRoQw=="
+    src="https://cdn.jsdelivr.net/npm/luxon@1.25.0/build/global/luxon.min.js"
+    integrity="sha256-OVk2fwTRcXYlVFxr/ECXsakqelJbOg5WCj1dXSIb+nU="
     crossorigin="anonymous"></script>
 
   <script
@@ -37,7 +37,12 @@
     integrity="sha384-hX5odjoulJel81+3dsnorXlZ7kA46f8qrV+2sBCcEAXaCyEAiRusFRjaefWw2NPp"
     crossorigin="anonymous"></script> 
 
-  <script src="./src/index.2.mjs" type="module" async></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/stimulus@2.0.0/dist/stimulus.umd.min.js"
+    integrity="sha384-HJ5cLpHA5dhvDYYjn9XuKcKZ0CAhJaoH5kKprl55DusVattFPJ7mIuf/I5mnUqhu"
+    crossorigin="anonymous"></script>
+
+  <script src="./src/index.3.mjs" type="module" async></script>
   <style>
     form { display: flex; flex-direction: column; }
     form > span { display: flex; flex-direction: row; align-items: baseline; }
@@ -53,19 +58,21 @@
   </style>
 </head>
 <html>
-  <input type="checkbox" id="modal-control" class="modal" checked>
-  <div>
-    <div class="card">
-      <p class="section">
-        Vul hier de geplande afstand en tijd in.<br>
-        Zo kan je berekenen wat een rit met &eacute;&eacute;n van de Gentse autodeelplatformen zal kosten!
-        <br>(Merk op: enkel de ritkost wordt in rekening gebracht. 'Vaste' kosten als Coop-activatie worden niet meegerekend.)
-      </p>
-      <div class="container">
-        <div class="input-group row">
-          <label for="modal-control" class="button small primary col-sm-2">OK</label>
-          <input type="checkbox" id="dont-show-anymore">
-          <label for="dont-show-anymore">Niet meer tonen</label>
+  <div data-controller="startMessage">
+    <input type="checkbox" id="modal-control" class="modal" data-action="change->startMessage#close">
+    <div>
+      <div class="card">
+        <p class="section">
+          Vul hier de geplande afstand en tijd in.<br>
+          Zo kan je berekenen wat een rit met &eacute;&eacute;n van de Gentse autodeelplatformen zal kosten!
+          <br>(Merk op: enkel de ritkost wordt in rekening gebracht. 'Vaste' kosten als Coop-activatie worden niet meegerekend.)
+        </p>
+        <div class="container">
+          <div class="input-group row">
+            <label for="modal-control" class="button small primary col-sm-2">OK</label>
+            <input type="checkbox" id="dont-show-anymore">
+            <label for="dont-show-anymore">Niet meer tonen</label>
+          </div>
         </div>
       </div>
     </div>

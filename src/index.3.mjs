@@ -1,15 +1,12 @@
 import { createModel } from './models/costCalculation.1.mjs'
+import createStartMessage from './controllers/StartMessage.2.mjs'
+
+const { Application, Controller} = Stimulus
+
+const application = Application.start()
+application.register("startMessage", createStartMessage(Controller))
 
 const { settings, calculateRounded } = createModel(luxon, math)
-
-document.getElementById('modal-control').addEventListener(
-  'click',
-  () => {
-    if (document.getElementById('dont-show-anymore').checked)
-      document.cookie = 'dontShowIntro=true'
-    return true
-  }
-)
 
 function showResult (e) {
   e.preventDefault()
@@ -124,8 +121,6 @@ function showFixedTimeGraph (distance, duration, kWhPerKm, startTime) {
 }
 
 window.onload = () => {
-  if (0 <= document.cookie.indexOf('dontShowIntro=true'))
-  document.getElementById('modal-control').removeAttribute('checked')
   const distance = (document.cookie.match(/distance=(\d*)/) || [])[1]
   const duration = (document.cookie.match(/duration=(\d*)/) || [])[1]
   const kWhPer100Km = (document.cookie.match(/kWhPer100Km=(\d*)/) || [])[1] 
