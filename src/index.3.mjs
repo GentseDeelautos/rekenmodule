@@ -4,7 +4,7 @@ import createStartMessage from './controllers/StartMessage.2.mjs'
 const { Application, Controller} = Stimulus
 
 const application = Application.start()
-application.register("startMessage", createStartMessage(Controller))
+application.register("start-message", createStartMessage(Controller))
 
 const { settings, calculateRounded } = createModel(luxon, math)
 

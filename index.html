@@ -58,8 +58,8 @@
   </style>
 </head>
 <html>
-  <div data-controller="startMessage">
-    <input type="checkbox" id="modal-control" class="modal" data-action="change->startMessage#close">
+  <div data-controller="start-message">
+    <input type="checkbox" id="modal-control" class="modal" data-action="change->start-message#close" >
     <div>
       <div class="card">
         <p class="section">
@@ -70,7 +70,7 @@
         <div class="container">
           <div class="input-group row">
             <label for="modal-control" class="button small primary col-sm-2">OK</label>
-            <input type="checkbox" id="dont-show-anymore">
+            <input type="checkbox" id="dont-show-anymore" data-start-message-target="dontShowAnymoreCheckBox">
             <label for="dont-show-anymore">Niet meer tonen</label>
           </div>
         </div>
