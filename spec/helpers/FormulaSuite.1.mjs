@@ -89,9 +89,9 @@ export const createTest = (luxon, math, getPageText) => {
         const planIndex = 4
         it('still has price of 01/01/2021', () => {
           const text = frag.textContent
-            .split('Bye bye tijdstress?')[1]
-            .split('Elke maand betaal je de gemaakte ritten met domiciliëring')[0]
-          expect(text).toContain(`${euroPerKw.toLocaleString('nl-BE')}0 euro per kWh.`)
+            .split('Ook last van tijdstress?')[1]
+            .split('Heb je credits nog beschikbaar op je Partago rekening')[0]
+          expect(text).toContain(`${euroPerKw/*.toLocaleString('nl-BE')*/} euro per kWh.`)
         })
       })
     })
@@ -183,12 +183,13 @@ export const createTest = (luxon, math, getPageText) => {
         describe('uurprijs', () => 
           it('is nog steeds hetzelfde als 01/01/2021', () =>
             expect(parts.start).toMatch(new RegExp(
-              `Uurprijs\\s\\(van 7u - 23u\\)\\n\\s*€\\s${costPerHour}\\n`))))
+              `Uurprijs\\s\\(van 7u - 23u\\)\\n\\s*€\\s${costPerHour}\\s\\n`
+            ))))
         describe('kilometerprijs', () => {
           describe('minder dan 100 km', () => 
             it('is nog steeds hetzelfde als 01/01/2021', () =>
               expect(parts.start).toMatch(new RegExp(
-                `Kilometerprijs\\s\\<\\s100km\\n\\s*€\\s${to100.toLocaleString('nl-BE')}\\n`))))
+                `Kilometerprijs\\s\\<\\s100km\\n\\s*€\\s${to100 /*.toLocaleString('nl-BE')*/}\\s\\n`))))
           describe('meer dan 100 km', () => 
             it('is nog steeds hetzelfde als 01/01/2021', () =>
               expect(parts.start).toMatch(new RegExp(
