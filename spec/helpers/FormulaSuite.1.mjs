@@ -29,9 +29,9 @@ export const createTest = (luxon, math, getPageText) => {
             expect(text).toContain(` ${creditsPerKwh} credits per verbruikte kWh`))
           it('still has the same free time range as of 01/01/2021', () =>
             expect(ritPrijzen[planIndex]).toContain(`gratis tussen ${freeTimeRange[0]} en ${freeTimeRange[1]}`))
-          it('still has price as of 01/01/2010', async () => {
+          it('still has price as of 01/01/2021', async () => {
             expect(ritPrijzen[planIndex])
-              .toContain(`${(Math.round(euroPerCredit*10000) /100 ).toLocaleString('nl-BE')} cent per minuut`)
+              .toContain(`${(Math.round(euroPerCredit*100*60) /100 ).toLocaleString('nl-BE')} € per uur`)
           })
           it('considers DST changes', () =>{
             const beforeDST = luxon.DateTime.fromISO('2021-03-28T00:00:00', { zone: 'Europe/Brussels'})
@@ -48,7 +48,7 @@ export const createTest = (luxon, math, getPageText) => {
             expect(text).toContain(` ${creditsPerKwh} credits per verbruikte kWh`))
           it('still has price as of 01/01/2010', async () => {
               expect(ritPrijzen[planIndex])
-                .toContain(`${(Math.round(euroPerCredit*10000) /100 ).toLocaleString('nl-BE')} cent per minuut`)
+                .toContain(`${(euroPerCredit * 60).toLocaleString('nl-BE')} € per uur`)
           })
           it('still has the same free time range as of 01/01/2021', () =>
             expect(ritPrijzen[planIndex]).toContain(`gratis tussen ${freeTimeRange[0]} en ${freeTimeRange[1]}`))
@@ -63,7 +63,7 @@ export const createTest = (luxon, math, getPageText) => {
             expect(text).toContain(` ${creditsPerKwh} credits per verbruikte kWh`))
           it('still has price as of 01/01/2010', async () => {
             expect(ritPrijzen[planIndex])
-              .toContain(`${(Math.round(euroPerCredit*10000) /100 ).toLocaleString('nl-BE')} cent per minuut`)
+              .toContain(`${(Math.round(euroPerCredit*100*60) /100 ).toLocaleString('nl-BE')} € per uur`)
           })
           it('still has the same free time range as of 01/01/2021', () =>
           expect(ritPrijzen[planIndex]).toContain(`gratis tussen ${freeTimeRange[0]} en ${freeTimeRange[1]}`))
@@ -78,7 +78,7 @@ export const createTest = (luxon, math, getPageText) => {
             expect(text).toContain(` ${creditsPerKwh} credits per verbruikte kWh`))
           it('still has price as of 01/01/2010', async () => {
             expect(ritPrijzen[planIndex])
-              .toContain(`${(Math.round(euroPerCredit*10000) /100 ).toLocaleString('nl-BE')},00 cent per minuut`)
+              .toContain(`${(Math.round(euroPerCredit * 60) ).toLocaleString('nl-BE')},00 € per uur`)
           })
           it('still has the same free time range as of 01/01/2021', () =>
           expect(ritPrijzen[planIndex]).toContain(`gratis tussen ${freeTimeRange[0]} en ${freeTimeRange[1]}`))
