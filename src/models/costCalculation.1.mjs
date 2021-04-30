@@ -135,19 +135,19 @@ export const createModel = (luxon, math) => {
     //   },
     //   getKeyValues: Partago.nonCoop.getKeyValues
     // },
-    // 'Partago coop': {
-    //   variables: {
-    //     euroPerKw: 1.4
-    //   },
-    //   getKeyValues: ({ startTime, timeRangeMs, distanceRange, variables }) => {
-    //     const { kWhPerKm, euroPerKw } = variables
-    //     return [].concat(timeRangeMs).reduce((acc, until) => (
-    //       [...acc, ...[].concat(distanceRange).reduce((acc2, distance) => (
-    //         [...acc2, [until + startTime.valueOf(), distance, Math.round(100 * distance * kWhPerKm * euroPerKw) / 100]]
-    //       ), [])]
-    //     ), [])
-    //   }
-    // },
+    'Partago coop': {
+      variables: {
+        euroPerKw: 1.4
+      },
+      getKeyValues: ({ startTime, timeRangeMs, distanceRange, variables }) => {
+        const { kWhPerKm, euroPerKw } = variables
+        return [].concat(timeRangeMs).reduce((acc, until) => (
+          [...acc, ...[].concat(distanceRange).reduce((acc2, distance) => (
+            [...acc2, [until + startTime.valueOf(), distance, Math.round(100 * distance * kWhPerKm * euroPerKw) / 100]]
+          ), [])]
+        ), [])
+      }
+    },
     'D&eacute;gage': {
       variables: {
         to100: 0.32,  // prijs per distance tem 100km

@@ -4,7 +4,7 @@ export const createTest = (luxon, math, getPageText) => {
   const { settings } = createModel(luxon, math)
 
   describe('Formulas', () => {
-    xdescribe('Partago', () => {
+    describe('Partago', () => {
       let frag
       let ritPrijzen
       beforeAll(async () => {
@@ -12,7 +12,7 @@ export const createTest = (luxon, math, getPageText) => {
         const [_, ...rest] = frag.textContent.split('Ritprijs')
         ritPrijzen = rest
       })
-      describe('abonnement en bundel', () => {
+      xdescribe('abonnement en bundel', () => {
         let text
         beforeAll(() => {
           text = frag.textContent
@@ -87,11 +87,11 @@ export const createTest = (luxon, math, getPageText) => {
       describe('coop formule', () => {
         const { euroPerKw } = settings['Partago coop'].variables
         const planIndex = 4
-        it('still has price of 01/01/2021', () => {
+        it('still has price of 30/04/2021', () => {
           const text = frag.textContent
-            .split('Ook last van tijdstress?')[1]
-            .split('Heb je credits nog beschikbaar op je Partago rekening')[0]
-          expect(text).toContain(`${euroPerKw/*.toLocaleString('nl-BE')*/} euro per kWh.`)
+            .split('Ritprijs')[3]
+            //.split('Heb je credits nog beschikbaar op je Partago rekening')[0]
+          expect(text).toContain(`${euroPerKw.toLocaleString('nl-BE')}0 € per kWh(`)
         })
       })
     })

@@ -13,7 +13,7 @@ export const createTest = (luxon, math) => {
       const params = { name: 'Partago grote bundel', distance: 0, duration: 0 }
       const freeTimeRange = ['0:00', '6:00']
 
-      describe('grote bundel', () => {
+      xdescribe('grote bundel', () => {
         const pricePerCredit = 300 / 4800 
         const startupFee = pricePerCredit * startupCredits
         const { getKeyValues, variables } = settings[params.name]
