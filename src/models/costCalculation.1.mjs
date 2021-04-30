@@ -107,47 +107,47 @@ export const createModel = (luxon, math) => {
   }
 
   const settings = {
-    'Partago grote bundel': {
-      variables: {
-        ...Partago.nonCoop.variables,
-        euroPerCredit: 300.0 / 4800,
-      },
-      getKeyValues: Partago.nonCoop.getKeyValues
-    },
-    'Partago kleine bundel': {
-      variables: {
-        ...Partago.nonCoop.variables,
-        euroPerCredit: 75.0 / 1000,
-      },
-      getKeyValues: Partago.nonCoop.getKeyValues
-    },
-    'Partago klein abonnement': {
-      variables: {
-        ...Partago.nonCoop.variables,
-        euroPerCredit: 95.0 / 1800,
-      },
-      getKeyValues: Partago.nonCoop.getKeyValues
-    },
-    'Partago groot abonnement': {
-      variables: {
-        ...Partago.nonCoop.variables,
-        euroPerCredit: 150.0 / 3000,
-      },
-      getKeyValues: Partago.nonCoop.getKeyValues
-    },
-    'Partago coop': {
-      variables: {
-        euroPerKw: 1.4
-      },
-      getKeyValues: ({ startTime, timeRangeMs, distanceRange, variables }) => {
-        const { kWhPerKm, euroPerKw } = variables
-        return [].concat(timeRangeMs).reduce((acc, until) => (
-          [...acc, ...[].concat(distanceRange).reduce((acc2, distance) => (
-            [...acc2, [until + startTime.valueOf(), distance, Math.round(100 * distance * kWhPerKm * euroPerKw) / 100]]
-          ), [])]
-        ), [])
-      }
-    },
+    // 'Partago grote bundel': {
+    //   variables: {
+    //     ...Partago.nonCoop.variables,
+    //     euroPerCredit: 300.0 / 4800,
+    //   },
+    //   getKeyValues: Partago.nonCoop.getKeyValues
+    // },
+    // 'Partago kleine bundel': {
+    //   variables: {
+    //     ...Partago.nonCoop.variables,
+    //     euroPerCredit: 75.0 / 1000,
+    //   },
+    //   getKeyValues: Partago.nonCoop.getKeyValues
+    // },
+    // 'Partago klein abonnement': {
+    //   variables: {
+    //     ...Partago.nonCoop.variables,
+    //     euroPerCredit: 95.0 / 1800,
+    //   },
+    //   getKeyValues: Partago.nonCoop.getKeyValues
+    // },
+    // 'Partago groot abonnement': {
+    //   variables: {
+    //     ...Partago.nonCoop.variables,
+    //     euroPerCredit: 150.0 / 3000,
+    //   },
+    //   getKeyValues: Partago.nonCoop.getKeyValues
+    // },
+    // 'Partago coop': {
+    //   variables: {
+    //     euroPerKw: 1.4
+    //   },
+    //   getKeyValues: ({ startTime, timeRangeMs, distanceRange, variables }) => {
+    //     const { kWhPerKm, euroPerKw } = variables
+    //     return [].concat(timeRangeMs).reduce((acc, until) => (
+    //       [...acc, ...[].concat(distanceRange).reduce((acc2, distance) => (
+    //         [...acc2, [until + startTime.valueOf(), distance, Math.round(100 * distance * kWhPerKm * euroPerKw) / 100]]
+    //       ), [])]
+    //     ), [])
+    //   }
+    // },
     'D&eacute;gage': {
       variables: {
         to100: 0.32,  // prijs per distance tem 100km
