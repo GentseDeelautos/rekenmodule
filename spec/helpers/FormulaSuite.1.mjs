@@ -12,11 +12,11 @@ export const createTest = (luxon, math, getPageText) => {
         const [_, ...rest] = frag.textContent.split('Ritprijs')
         ritPrijzen = rest
       })
-      xdescribe('abonnement en bundel', () => {
+      describe('bundels', () => {
         let text
         beforeAll(() => {
           text = frag.textContent
-            .split('Stap 2 Koop jouw bundel of activeer een abonnement')[1]
+            .split('Stap 2 Kies een formule')[1]
             .split('Stap 3 Om het leven gemakkelijker te maken')[0]
         })
         describe('kleine bundel', () => {
@@ -52,36 +52,6 @@ export const createTest = (luxon, math, getPageText) => {
           })
           it('still has the same free time range as of 01/01/2021', () =>
             expect(ritPrijzen[planIndex]).toContain(`gratis tussen ${freeTimeRange[0]} en ${freeTimeRange[1]}`))
-        })
-        describe('klein abonnement', () => {
-          const { freeTimeRange, startCostCredits, creditsPerKwh, euroPerCredit } =
-            settings['Partago klein abonnement'].variables
-          const planIndex = 2
-          it('matches opstartcredits', () =>
-            expect(text).toContain(` ${startCostCredits} credits bij reserveren`))
-          it('matches credits per kWh', () =>
-            expect(text).toContain(` ${creditsPerKwh} credits per verbruikte kWh`))
-          it('still has price as of 01/01/2010', async () => {
-            expect(ritPrijzen[planIndex])
-              .toContain(`${(Math.round(euroPerCredit*100*60) /100 ).toLocaleString('nl-BE')} € per uur`)
-          })
-          it('still has the same free time range as of 01/01/2021', () =>
-          expect(ritPrijzen[planIndex]).toContain(`gratis tussen ${freeTimeRange[0]} en ${freeTimeRange[1]}`))
-        })
-        describe('groot abonnement', () => {
-          const { freeTimeRange, startCostCredits, creditsPerKwh, euroPerCredit } =
-            settings['Partago groot abonnement'].variables
-          const planIndex = 3
-          it('matches opstartcredits', () =>
-            expect(text).toContain(` ${startCostCredits} credits bij reserveren`))
-          it('matches credits per kWh', () =>
-            expect(text).toContain(` ${creditsPerKwh} credits per verbruikte kWh`))
-          it('still has price as of 01/01/2010', async () => {
-            expect(ritPrijzen[planIndex])
-              .toContain(`${(Math.round(euroPerCredit * 60) ).toLocaleString('nl-BE')},00 € per uur`)
-          })
-          it('still has the same free time range as of 01/01/2021', () =>
-          expect(ritPrijzen[planIndex]).toContain(`gratis tussen ${freeTimeRange[0]} en ${freeTimeRange[1]}`))
         })
       })
       describe('coop formule', () => {

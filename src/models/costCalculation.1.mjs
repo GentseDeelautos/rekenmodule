@@ -107,34 +107,21 @@ export const createModel = (luxon, math) => {
   }
 
   const settings = {
-    // 'Partago grote bundel': {
-    //   variables: {
-    //     ...Partago.nonCoop.variables,
-    //     euroPerCredit: 300.0 / 4800,
-    //   },
-    //   getKeyValues: Partago.nonCoop.getKeyValues
-    // },
-    // 'Partago kleine bundel': {
-    //   variables: {
-    //     ...Partago.nonCoop.variables,
-    //     euroPerCredit: 75.0 / 1000,
-    //   },
-    //   getKeyValues: Partago.nonCoop.getKeyValues
-    // },
-    // 'Partago klein abonnement': {
-    //   variables: {
-    //     ...Partago.nonCoop.variables,
-    //     euroPerCredit: 95.0 / 1800,
-    //   },
-    //   getKeyValues: Partago.nonCoop.getKeyValues
-    // },
-    // 'Partago groot abonnement': {
-    //   variables: {
-    //     ...Partago.nonCoop.variables,
-    //     euroPerCredit: 150.0 / 3000,
-    //   },
-    //   getKeyValues: Partago.nonCoop.getKeyValues
-    // },
+    'Partago grote bundel': {
+      variables: {
+        ...Partago.nonCoop.variables,
+        euroPerCredit: 300.0 / 4800,
+      },
+      getKeyValues: Partago.nonCoop.getKeyValues
+    },
+    'Partago kleine bundel': {
+      variables: {
+        ...Partago.nonCoop.variables,
+        euroPerCredit: 75.0 / 1000,
+      },
+      getKeyValues: Partago.nonCoop.getKeyValues
+    },
+
     'Partago coop': {
       variables: {
         euroPerKw: 1.4
