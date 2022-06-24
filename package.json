@@ -19,7 +19,7 @@
   "dependencies": {},
   "devDependencies": {
     "jasmine-core": "^3.6.0",
-    "jsdom": "^16.4.0",
+    "jsdom": "^16.5.0",
     "luxon": "^1.25.0",
     "mathjs": "^8.1.1",
     "node-fetch": "^2.6.1"
